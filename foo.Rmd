@@ -1,0 +1,8 @@
+---
+title: 'RPP: Methods to Assess Replication'
+author: "STAT 461"
+date: "Winter 2018"
+output: pdf_document
+---
+
+General ideas
