@@ -1,0 +1,212 @@
+---
+title: "Metrics for Assessing Replication: Statistical Significance"
+author: "STAT 461"
+date: "Winter 2018"
+output: pdf_document
+---
+
+The Open Science Collaboration (2015), when evaluating if findings have been replicated argue, "There is no single standard for evaluating replication success." 
+They analyzed replicate pairs in a variety of ways.
+
+# Correspondence of Significance
+
+\begin{quote}
+Assuming a two-tailed test and significance or a level of 0.05, all test results of original and replication studies were classified as statistically significant ($p \leq 0.05$) and nonsignificant ($p > 0.05$). However, original studies that interpreted nonsignificant $p$ values as significant were coded as significant (four cases, all with $p$ values $< 0.06$).
+\end{quote}
+
+The quote above suggests one metric of assessing replication is to determine if findings are statistically significant or not. 
+The OSC is not alone in considering this metric (see Steiner and Wong, 2016; Valentine, 2012)
+By this standard, the OSC concluded that over 60% of their attempted replications failed. 
+
+However, it is not clear how exactly to interpret these results. 
+For one, the difference in between statistically significant and nonsignificant findings may not reflect meaningful scientific differences in effects.
+As well, the properties of this as an inference procedure---e.g., error rates---are necessary to understand the OSC findings.
+How often, for instance, might this analysis construe negligible scientific differences between studies as nonreplication?
+
+Using a statistical framework motivated by meta-analysis, this vignette attemts to clarify subjective ideas of replication as implied by comparing statistical significance.
+It describes the types of definitions of replication such analyses might correspond to, and delineates some of the statistical properties in those scenarios.
+
+
+# Statistical Model and Analysis
+
+We can represent the true underlying scientific effect parameter in study $i$ as $\theta_i$, which we refer to as the study's results.
+This is the value that would be observed if study $i$ had perfect precision (zero measurement and sampling variance).
+We do not actually observe $\theta_i$, but instead observe an estimate $T_i$ that has some variance $v_i$---due, for example, to sampling.
+Four simplifying assumptions used in this vignette are that $T_i$ are independent, unbiased, normally distributed, with known sampling variance $v_i$: 
+\[
+T_i \stackrel{indep}{\sim} N(\theta_i, v_i)
+\]
+In general, we may let $i$ range from 1 (the original study) up to an arbitrary number $k > 1$ (to reflect $k-1$ replication attempts), but to evaluate the analysis by the OSC, we set $k=2$. 
+Thus $i=1$ corresponds to the original study and $i=2$ refers to the (single) replicate study.
+
+We would argue that replication can be defined in terms of underlying effect parameters $\theta_i$. 
+They may vary due to differences in sample compositions---studies $i$ and $j$ sample from different populations---or experimental contexts---minor variations in the way studies $i$ and $j$ carry out the experiment.
+However, if both are ignoreable (or nearly so), then the effect parameters ought to be (nearly) the same.
+Conversely, estimates $T_i$ may vary due to random chance; that is, even if studies share the same underlying effect $\theta$, estimates will differ due to variation from sampling. 
+Thus, as a guiding principle, we would argue that coherent scientific and statistical definitions of replication should involve similarty between the $\theta_i$. 
+
+Comparison of statistical significance involves computing $p$-values for the replicates and determining if both are either nonsignificant $p > 0.05$ or significant $p \leq 0.05$.
+As stated above, this is the totality of this analysis, and we can summarize this metric as 
+\begin{equation}
+\mathbf{1}\{p_1 \leq 0.05 \wedge p_2 \leq 0.05\} + 
+\mathbf{1}\{p_1 > 0.05 \wedge p_2 > 0.05\}
+\label{eq:metsig}
+\end{equation}
+Under the model (and simplifying assumptions), we can rewrite this as 
+\begin{equation}
+\mathbf{1}\left\{
+            \frac{\vert T_1 \vert}{\sqrt{v_1}} \geq 1.96 \wedge 
+            \frac{\vert T_2 \vert}{\sqrt{v_2}} \geq 1.96
+          \right\} + 
+\mathbf{1}\left\{
+            \frac{\vert T_1 \vert}{\sqrt{v_1}} < 1.96 \wedge 
+            \frac{\vert T_2 \vert}{\sqrt{v_2}} < 1.96
+          \right\}
+\label{eq:metsigT}
+\end{equation}
+
+A type I error occurs when one study is significant, and the other is not (assuming that the studies replicate). 
+Then, the probability of a false positive is given by
+\begin{align*}
+P\left[\text{Type I Error}\right] 
+  &= P\left[
+        \frac{\vert T_1 \vert}{\sqrt{v_1}} \geq 1.96 \wedge 
+        \frac{\vert T_2 \vert}{\sqrt{v_2}} < 1.96
+     \right] + 
+     P\left[
+        \frac{\vert T_1 \vert}{\sqrt{v_1}} > 1.96 \wedge 
+        \frac{\vert T_2 \vert}{\sqrt{v_2}} \geq 1.96
+     \right] \\
+  &= P\left[
+      \frac{\vert T_1 \vert}{\sqrt{v_1}} \geq 1.96
+     \right] 
+    P\left[
+      \frac{\vert T_2 \vert}{\sqrt{v_2}} < 1.96
+     \right] + 
+    P\left[
+      \frac{\vert T_1 \vert}{\sqrt{v_1}} > 1.96
+     \right]
+    P\left[
+      \frac{\vert T_2 \vert}{\sqrt{v_2}} \geq 1.96
+     \right] \\
+  &= \left[
+        \Phi\left(-1.96 - \frac{\theta_1}{\sqrt{v_1}}\right) + 
+        1 - \Phi\left(1.96 - \frac{\theta_1}{\sqrt{v_1}}\right)
+     \right]
+     \left[
+        \Phi\left(1.96 - \frac{\theta_2}{\sqrt{v_2}}\right) - 
+        \Phi\left(-1.96 - \frac{\theta_2}{\sqrt{v_2}}\right)
+     \right]
+     + \\&\quad\quad
+     \left[
+        \Phi\left(1.96 - \frac{\theta_1}{\sqrt{v_1}}\right) - 
+        \Phi\left(-1.96 - \frac{\theta_1}{\sqrt{v_1}}\right)
+     \right]
+     \left[
+        \Phi\left(-1.96 - \frac{\theta_2}{\sqrt{v_2}}\right) + 
+        1 - \Phi\left(1.96 - \frac{\theta_2}{\sqrt{v_2}}\right)
+     \right]
+\end{align*}
+Note that when both studies replicate exactly, when $\theta_1 = \theta_2 = 0$, so that both studies have null effects, then the expression above reduces to
+\[
+\left[
+  \Phi\left(-c_{\alpha}\right) + 
+  1 - \Phi\left(c_{\alpha}\right)
+\right]
+\left[
+  \Phi\left(c_{\alpha}\right) - 
+  \Phi\left(-c_{\alpha}\right)
+\right] =
+2 (\alpha - \alpha^2)
+\]
+Thus, if both significance tests are at the $\alpha = 0.05$ level, then the type I error rate in this case is 0.095.
+
+In general, if the studies replicate exactly, so that $\theta_1 = \theta_2 = \theta$ and the sampling variances are identical so that $v_1 = v_2 = v$, then the expression can be written as 
+\[
+2[\eta - \eta^2]
+\]
+
+
+
+```{r, echo=F, message=F, warning=F}
+library(ggplot2)
+typeIerror = function(theta1, theta2, v1, v2, alpha=0.05, side='both'){
+  if(side == 'both'){
+    calpha = qnorm(1 - alpha/2)
+  } else if(side == 'upper'){
+    calpha = qnorm(1 - alpha)
+  } else if (side == 'lower'){
+    calpha = qnorm(alpha)
+  } else {
+    print("Must specify side as 'both', 'upper', or 'lower'. 
+            Using default 'both' for 2-sided test.")
+    calpha = qnorm(1 - alpha/2)
+  }
+  
+  return(
+    (pnorm(-calpha - theta1/sqrt(v1)) + 1 - pnorm(calpha - theta1/sqrt(v1))) *
+    (pnorm(calpha - theta2/sqrt(v2)) + pnorm(-calpha - theta2/sqrt(v2))) +
+      (pnorm(calpha - theta1/sqrt(v1)) + pnorm(-calpha - theta1/sqrt(v1))) *
+      (pnorm(-calpha - theta2/sqrt(v2)) + 1 - pnorm(calpha - theta2/sqrt(v2)))
+  )
+}
+tmp = setNames(data.frame(expand.grid(10:100, 10:100)), c('n1', 'n2'))
+tmp$err0 = sapply(1:nrow(tmp), 
+                  FUN=function(i) 
+                    typeIerror(theta1 = 0, 
+                               theta2 = 0, 
+                               v1 = 2/tmp$n1[i], 
+                               v2 = 2/tmp$n2[i]))
+tmp$err2 = sapply(1:nrow(tmp), 
+                  FUN=function(i) 
+                    typeIerror(theta1 = 0.2, 
+                               theta2 = 0.2, 
+                               v1 = 2/tmp$n1[i], 
+                               v2 = 2/tmp$n2[i]))
+tmp$err5 = sapply(1:nrow(tmp), 
+                  FUN=function(i) 
+                    typeIerror(theta1 = 0.5, 
+                               theta2 = 0.5, 
+                               v1 = 2/tmp$n1[i], 
+                               v2 = 2/tmp$n2[i]))
+tmp$err8 = sapply(1:nrow(tmp), 
+                  FUN=function(i) 
+                    typeIerror(theta1 = 0.8, 
+                               theta2 = 0.8, 
+                               v1 = 2/tmp$n1[i], 
+                               v2 = 2/tmp$n2[i]))
+
+ggplot(tmp) + geom_point(aes(n1, n2, color=err2)) + 
+  scale_color_gradient(low='white', high='red')
+
+ggplot(tmp) + geom_point(aes(n1, n2, color=err5)) + 
+  scale_color_gradient(low='white', high='red')
+
+ggplot(tmp) + geom_point(aes(n1, n2, color=err8)) + 
+  scale_color_gradient(low='white', high='red')
+
+tmp2 = setNames(data.frame(expand.grid(10:100, 0.01*0:100)), c('n', 'theta'))
+tmp2$err = sapply(1:nrow(tmp2), 
+                  FUN=function(i) 
+                    typeIerror(theta1 = tmp2$theta[i], 
+                               theta2 = tmp2$theta[i], 
+                               v1 = 2/tmp2$n[i], 
+                               v2 = 2/tmp2$n[i]))
+ggplot(tmp2) + geom_point(aes(n, theta, color=err)) +
+  scale_color_gradient(low='white', high='red')
+```
+
+
+
+However, others have noted that statistical significance may not correspond to replication if the significant estimates do not share the same sign. 
+That is, if study 1 has a positive significant estimate and study 2 has a negative and significant estimate, one likely would not conclude they replicate.
+Thus, an alternative to (\ref{eq:metsig}) could be
+\begin{equation}
+\mathbf{1}\{p_1 \leq 0.05 \wedge p_2 \leq 0.05\}\mathbf{1}\{\text{sign}(T_1) = \text{sign}(T_2)\} + 
+\mathbf{1}\{p_1 > 0.05 \wedge p_2 > 0.05\}
+\label{eq:metsigsign}
+\end{equation}
+These are related analyses that have slightly different properties, which we illustrate below.
+
+
+
