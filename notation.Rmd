@@ -5,7 +5,6 @@ output: pdf_document
 
 # Statistical Model for Replication Studies 
 
-[Added stuff for example...]
 
 Meta-analysis represents the "results" of an experiment by an effect parameter, which we denote as $\theta$.
 This "true" effect reflects what the researcher would observe if they has no uncertainty in their estimate; for instance, if they had an infinite sample size.
