@@ -11,16 +11,48 @@
 ###-----------------------------------------------------------------------------###
 ###-----------------------------------------------------------------------------###
 
-##----------------------------------------##
+##-----------------------------------------------##
 ## Common Libraries
-##----------------------------------------##
+##-----------------------------------------------##
 library(dplyr); library(distr); library(ggplot2)
 
 
-##----------------------------------------##
+##-----------------------------------------------##
+## Power and p-value functions
+##-----------------------------------------------##
+power_fun <- function(theta, v){
+  
+  #############################################
+  # TAKES: theta; a vector of means
+  #         v; a vector of sampling variances
+  #
+  # RETURNS: power of design (vector)
+  #############################################
+  
+  return((1 - pnorm(1.96, theta/sqrt(v))) + pnorm(-1.96, theta/sqrt(v))) 
+  
+}
+
+pval_fun <- function(t, v){
+  
+  #############################################
+  # TAKES: t; a vector of estimates
+  #         v; a vector of sampling variances
+  #
+  # RETURNS: p-value of design (vector)
+  # 
+  # * Assumes normal dist. w/known variance
+  #############################################
+  
+  return(2 * (1 - pnorm(abs(t)/sqrt(v), 0, 1))) 
+  
+}
+
+##-----------------------------------------------##
 ## Simulating k studies
-##----------------------------------------##
+##-----------------------------------------------##
 simulate_studies <- function(theta, v, k=NULL){
+  
   #############################################
   # TAKES: theta; a vector of means
   #         v; a vector of sampling variances
@@ -66,18 +98,25 @@ simulate_studies <- function(theta, v, k=NULL){
   } else { # Valid: run simluation and return values
     
     ###-----Run simluation, compute properties, and return it as a DF.
+    draws = rnorm(k, theta, sqrt(v))
     return(
       data.frame(
-              t = rnorm(k, theta, sqrt(v)), # draws (T)
+              t = draws, # draws (T)
               v = v, # variances
               theta = theta, # means
-              power = (1 - pnorm(1.96, theta/sqrt(v))) + pnorm(-1.96, theta/sqrt(v)), # power of each study
-              p = 2 * (1 - pnorm(abs(t)/sqrt(v), 0, 1)) # p-value of each estimate
+              power = power_fun(theta, v), # power of each study
+              p = pval_fun(t, v) # p-value of each estimate
       )
     )
   
   }
 }
-simulate_studies(rnorm(2, 0, 10), 3/393, 2)
+
+# simulate_studies(rnorm(10, 0.2, .1), 3/393)
 
 
+##-----------------------------------------------##
+## Standard Themes for ggplot
+##-----------------------------------------------##
+std_theme = theme(panel.grid.minor = element_blank(),
+                  axis.ticks = element_blank())
