@@ -78,6 +78,6 @@ simulate_studies <- function(theta, v, k=NULL){
   
   }
 }
-simulate_studies(.2, 3/393, 2)
+simulate_studies(rnorm(2, 0, 10), 3/393, 2)
 
 
