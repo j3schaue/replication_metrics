@@ -1,0 +1,57 @@
+---
+title: "Correspondence in Significance"
+output: pdf_document
+---
+
+Programs of research that examine the replicability of research findings have become more common in psychology. 
+However, there is some ambiguity over how to assess the findings of such programs; that is, how do we know if a finding has been replicated?
+The Open Science Collaboration (2015) argue, "There is no single standard for evaluating replication success," and then analyzed replicate pairs in a variety of ways.
+Subsequent programs have used some of these same analysis methods (e.g., Camerer, et al., 2016; Schweinsberg, et al., 2016).
+
+It is not entirely clear what these methods say about replication.
+For one, an actual definition of replication remains somewhat elusive---or flexible---across these methods. 
+Saying that studies get "the same result" is somewhat subjective, and the OSC attempted to operationalize this by describing several different scenarios of studies getting "the same result".
+Moreover, interpreting the results of the OSC analyses also requires knowledge of the properties of the methods they (and others) use.
+For instance, how sensitive are these analyses? 
+The irony is that answering this second question, in some ways, requires an answer to the former: how do we define replication?
+
+In this paper, we clarify subjective notions about replication using a meta-analytic framework. 
+Given this definition, we then evaluate various analysis methods to determine their properties.
+
+
+# Defining Successful Replication: Meta-analytic Perspectives
+
+Meta-analysis represents the "results" of an experiment by an effect parameter, denoted $\theta$.
+This "true" effect reflects what the researcher would observe if they had an infinite sample size.
+Effect parameters are typically on a standard scale, such as a standardized mean difference, Fisher-transformed correlation coefficient, or log-odds ratio.
+
+In the context of replication studies, we have at least $k \geq 2$ such findings, so let $\theta_i$ describe the results of the $i$th study.
+For the RPP and RPE programs, this invovles $\theta_1$ for the original study and $\theta_2$ for the replicate.
+However, we do not actually observe $\theta_1$ and $\theta_2$, and instead we estimate them by $T_1$ and $T_2$, and these estimates have variances $v_1$ and $v_2$.
+The estimates and their variances are what get reported in typical statistical analyses of experiments.
+
+We argue that one useful definition of replication involves the similarity not of estimates $T_i$, but of actual true effects $\theta_i$.
+The $T_i$ might differ because of both differences in the underlying true effects, but also due to random chance.
+The $\theta_i$ might differ, however, because studies sample participants from different populations, or if there are differences in experimental contexts and conditions between experiments.
+Thus, it may make sense to define replication in terms of differences in experiments rather than statistical noise.
+Note that there is a connection to the potential outcomes framework in causal inference; for discussion see Wong and Steiner (2017).
+
+In that vein, $\theta_1 = \theta_2$ would be a convenient starting point for defining replication.
+However, there is evidence that even in the face of strong theory and sound scientific practice, that studies may still get slightly different results.
+Thus, a more practical definition would say studies replicate if $\theta_1 \approx \theta_2$.
+For further discussion on this distinction see Hedges and Schauer (2018).
+
+The key distinction here, is that the definition of replication involves the parameters $\theta_i$. 
+Analyses of replication involve the estimates $T_i$ and their variances $v_i$, which we use make inferences about how similar the $\theta_i$ are.
+This paradigm allows us to evaluate properties of analysis methods. 
+
+For this paper, we interpret the OSC analyses in the tradition of statistical hypothesis testing.
+Each analysis can be seen of a test of the null hypothesis $H_0: \theta_1 = \theta_2$, the metric used can be seen as a test statistic, and determinations that a finding failed to replicate correspond to a rejection of this null hypothesis.
+Note that this is not the only structure we might infer here, and is not even the only way to operationalize these methods as hypothesis tests.
+
+
+
+
+
+
+
