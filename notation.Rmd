@@ -27,3 +27,19 @@ In that vein, $\theta_1 = \theta_2$ would be a convenient starting point for def
 However, there is evidence that even in the face of strong theory and sound scientific practice, that studies may still get slightly different results.
 Thus, a more practical definition would say studies replicate if $\theta_1 \approx \theta_2$.
 For further discussion on this distinction see Hedges and Schauer (2018).
+
+
+# Notation Dictionary
+
+\begin{tabular}{l p{5cm}}
+$\theta_i$ & Effect parameter of study $i$, also called the study results.\\[1.1ex]
+$T_i$ & Estimate of study $i$\\[1.1ex]
+$v_i$ & Variance of estimate for study $i$\\[1.1ex]
+$p_i$ & $p$-value for study $i$\\[1.1ex]
+$1 - \beta_i$ & Power for study $i$\\[1.1ex]
+$\theta_{ij}$ & Effect parameter of study $i$ for finding $j$\\[1.1ex]
+$T_{ij}$ & Estimate of study $i$ for finding $j$\\[1.1ex]
+$v_{ij}$ & Variance of estimate for study $i$ for finding $j$\\[1.1ex]
+$p_{ij}$ & $p$-value for study $i$ for finding $j$\\[1.1ex]
+$1 - \beta_{ij}$ & Power for study $i$ for finding $j$\\[1.1ex]
+\end{tabular}
