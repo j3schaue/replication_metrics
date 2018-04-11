@@ -105,14 +105,14 @@ simulate_studies <- function(theta, v, k=NULL){
               v = v, # variances
               theta = theta, # means
               power = power_fun(theta, v), # power of each study
-              p = pval_fun(t, v) # p-value of each estimate
+              p = pval_fun(draws, v) # p-value of each estimate
       )
     )
   
   }
 }
 
-# simulate_studies(rnorm(10, 0.2, .1), 3/393)
+simulate_studies(rnorm(10, 0.2, .1), 3/393)
 
 
 ##-----------------------------------------------##
