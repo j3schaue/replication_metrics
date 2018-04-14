@@ -3,7 +3,7 @@ power_sims<-function(N,m,delta,n){
   # TAKES: N; number of simulations 
   #        m; number of false negatives
   #        delta; effect size under alternative hypothesis, on scale of cohen's d
-  #        n; sample size 
+  #        n; median total sample size across studies
   # RETURNS: power of Fisher's test to reject
   # Assumes 2-sided p-values, throws away p-values<=0.05 to match OSC methods
   ###############################################################################
@@ -14,7 +14,7 @@ power_sims<-function(N,m,delta,n){
     for (j in 1:m){
       p1[j]<-0
       while (p1[j]<=0.05) { #throw away p-values<=0.05
-        p1[j]<-2*(1-pnorm(abs(rnorm(1,delta,sqrt(2/n))))) #calculate p-values for the false negatives
+        p1[j]<-2*(1-pnorm(abs(rnorm(1,delta,sqrt(2/n)))/sqrt(2/n))) #calculate p-values for the false negatives
       }
     }
     #test statistic for Fisher's method, with transformation for truncating p-values
@@ -23,8 +23,9 @@ power_sims<-function(N,m,delta,n){
   power<-sum(T>155.4047)/N
   print(power)
 }
+
 n<-36
-delta<-0.5
+delta<-1
 power_sims(100000,1,delta,n)
 power_sims(100000,2,delta,n)
 power_sims(100000,3,delta,n)
