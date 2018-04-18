@@ -30,4 +30,9 @@ power_sims<-function(N,M,delta,n){
 
 M<-c(1,2,3,4,5,10,32,64)
 n<-38
-power_sims_table<-data.frame(M,power_0.5)
+power_0.2<-power_sims(100000,M,0.2,n)
+power_0.5<-power_sims(100000,M,0.5,n)
+power_0.8<-power_sims(100000,M,0.8,n)
+
+power_sims_table<-data.frame(M,power_0.2,power_0.5,power_0.8)
+saveRDS(power_sims_table,"Fisher_power_sims.Rds")
