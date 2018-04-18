@@ -1,0 +1,101 @@
+---
+title: "Properties of Methods for Assessing Replication"
+author: "Sarah Peko-Spicer"
+date: "February 7, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## A framework for replication
+Let there be $k$ pairs of studies each containing an original study and a replication study. Each pair of studies can be characterized by a vector of true effect parameters $(\theta_{1,j}, \theta_{2,j})$ that are unobserved with zero sampling variance. Each pair of studies is further associated with estimates $(T_{1,j}, T_{2,j})$ of these true effects. These estimates have sampling variances $V_{1,j}$ and $V_{2,j}$ which are assumed to be known. Let $T_{i,j} \sim N(\theta_{i,j}, V_{i,h})$ for $i=1,2$ and $j=1,2,\ldots, k$. Further, assume that $T_{i,j}$ are independent. Generally speaking, two studies replicate if $\theta_{1,j} \approx \theta_{2,j}$.\footnote{We observe \textit{strict} replication when $\theta_{1,j} = \theta_{2,j}$.}
+
+## Assessing replication via significance and p-values
+
+The Open Science Foundation (OSF) propose four different test for assessing replication based on significance and p-values. These methods include Fish'er method, McNemar's test, the Wilcoxon signed-rank test, and the \textit{t} test for dependent samples. In deriving properties for each of these tests, we assume a two-sided hypothesis test for each of the $2k$ studies with a significance level of 0.05. Let $p_{1,j}$ denote the p-value of the i\textsuperscript{th} original study and let $p_{2,j}$ denote the p-value of the i\textsuperscript{th} replication study.
+
+
+### The Umbrella of the Sign Test
+
+Before diving into the technical details, it may be worth making a quick observation about the relationship between three of these tests. As shown in the diagram below, three of these tests can be thought of as an extension on the sign test. If we chose to test for differences in pairs of p-values using the sign test, we would let $\rho = P(p_{1,i} > p_{2,i})$ and test $H_0: \rho = 0.5$. In this case, we don't make use of the actual p-values but rather the \textit{sign} of the difference in p-values. Suppose we want to use a little more information. We might observe that p-values can be ranked, which would call for use of the Wilcoxon signed-rank test. Alternatively, we might observe that we can categorize p-values as being either significant or non-significant. In this case, our observations are binary and we can use McNemar's test. Finally, we might make full use of the "information" contained in the p-values, acknowledging that they are continuous variables and assuming that the difference in p-values is approximately normally distributed. In this case, we might gravitate towards the t test. 
+
+This framework for the relationship for these tests may, or may not, prove to be useful in understanding the properties of these tests in the context of replication. It could be that this relationship can help explain congruence between the tests. It could also be the case that since these tests are using different amounts of information about the p-values, that they may produce results that do not necessarily confirm one another. 
+
+
+ 
+ ```{r, echo=FALSE}
+par(mar=c(1,1,1,1), mfrow=c(1,1))
+
+names <- c("Sign Test", "Wilcoxon Test", "t Test", "McNemar's Test")
+M <- matrix(nrow=4, ncol=3, byrow=T, data=0)
+
+
+
+M[2,1] <- "Ranked"
+M[3,1] <- "Normal"
+M[4,1] <- "Binary"
+plotmat(M, pos = c(1, 3), curve=0, name = names, lwd = 1,
+        box.lwd = 2, cex.txt = 0.6, dtext=-0.9, box.size = 0.15,
+        box.type = "square", box.prop = 0.5)
+
+```
+
+
+
+### McNemar's Test
+
+McNemar's test is typicaly used to test the difference in proportions in paired data. In this case, the test is used to determine if there is a statistically significant difference between the proportion of statistically significant results among original studies and the proportion of statistically significant results among replication studies. Applying this test requires categorizing each $p_{j,i}$ as either significant (1) or non-significant (0). That is, each pair of studies is associated with a vector of p-values $(p_{1,i}, p_{2,i})$ that can take one of the following pairs of vlaues: (0,0), (0,1), (1,0), (1,1). This information is generally summarized in a 2 $\times$ 2 contingency table containing counts of occurrences in the data of these four pairs of values.
+
+
+The null hypothesis for this test is one of marginal homogeneity. That is, under the null hypothesis, the marginal probabilities for each outcome are the same. In our case, this can be stated as
+
+$$
+\begin{aligned}
+H_0 &: P(p_{1,i} \leq 0.05 \cap p_{2,i} \leq 0.05) + P(p_{1,i} \leq 0.05 \cap p_{2,i} > 0.05) \\
+&= P(p_{1,i} \leq 0.05 \cap p_{2,i} \leq 0.05) + P(p_{1,i} > 0.05 \cap p_{2,i} \leq 0.05) 
+\end{aligned}
+$$
+
+This can be be further simplified to 
+
+$$
+\begin{aligned}
+H_0 &: P(p_{1,i} \leq 0.05) = P(p_{2,i} \leq 0.05) \\
+H_1 &: P(p_{1,i} \leq 0.05) \neq P(p_{2,i} \leq 0.05) 
+\end{aligned}
+$$
+
+In other words, under the null hypothesis, if we were to draw a study pair at random, the probability of obtaining a significant result in the original study  is equal to the probability of obtaining a significant result in the replication study. Taking this observation into consideration and noting that $p_{j,i} \leq 0.05 \equiv \frac{|T_{j,i}|}{\sqrt{V_{j,i}}} \geq 1.96$, we can rewrite the null hypothesis as follows.
+
+$$
+\begin{aligned}
+H_0 &: \sum\limits_{i=1}^k P \Big(\frac{|T_{1,i}|}{\sqrt{V_{1,i}}} \geq 1.96 |i \Big)P(i) = \sum\limits_{i=1}^k P \Big(\frac{|T_{2,i}|}{\sqrt{V_{2,i}}} \geq 1.96 |i \Big)P(i) \\
+\end{aligned}
+$$
+So, we can reformulate this test of difference in paired proportions into a test of difference in average power. A rejection of the null hypothesis leads to the conclusion that there is a statistically significant difference between the average power of the original studies and the average power of the replication studies. Given that the power of any of the $2k$ studies depends on a variety of factors including sample size, true effect size, and population variance, it should be clear that a rejection of the McNemar null does not immediately imply that, on average, the studies do not replicate. Conceivably, the true effect sizes can be quite similar within study pairs but differences in sample size or variance between original and replication studies would lead to a rejection of the McNemar null. This suggests that equality in average power is perhaps not the best metric for assessing replication, or even rates of replication.
+
+It is also worth exploring the power of McNemar's test, particularly in terms of its relationship to the power of the $2k$ studies. The power for McNemar's test is given by
+
+$$
+\begin{aligned}
+\beta_M = \Phi \Big ( \frac{(p_{10} - p_{01})\sqrt{k} - z_{1-\alpha/2}\sqrt{p_{10} + p_{01}}}{\sqrt{p_{10} + p_{01} - (p_{10} - p_{01})^2}} \Big)
+\end{aligned}
+$$
+Noting that $p_{10} - p_{01} = (p_{10} + p_{11}) - (p_{01} + p_{11})$ and that $p_{01} + p_{10} = (p_{10} + p_{11}) + (p_{01} + p_{11}) - 2p_{11}$, we can rewrite the power function as
+
+$$
+\begin{aligned}
+\Phi \Big ( \frac{(p_{1+} - p_{+1})\sqrt{k} - z_{1-\alpha/2}\sqrt{p_{+1} + p_{1+} - 2p_{11}}}{\sqrt{p_{+1} + p_{1+} - 2p_{11} - (p_{1+} - p_{+1})^2}} \Big)
+\end{aligned}
+$$
+where $p_{1+} = P(p_{1,i} \leq 0.05)$ and $p_{2+} = P(p_{2,i} \leq 0.05)$ for a randomly drawn $i$. 
+
+[Something to note, but for right now, I won't be making use of it...] 
+ 
+Back to $\beta_M$: If we assume that the original and replication studies are independent of one another, then $p_{10} = \frac{1}{k} \sum\limits_{j=1}^k (1-\beta_{1j})\beta_{2j} $ and $p_{01} = \frac{1}{k}\sum\limits_{j=1}^k \beta_{1j}(1-\beta_{2j})$ where $\beta_{1j}$ is the power of the j\textsuperscript{th} original study and $\beta_{2j}$ is the power of the j\textsuperscript{th} replication study. 
+
+One thing we may want to consider is what happens as the replication sample sizes grow large. If $n_{2j} \rightarrow \infty$ $\forall j$, then $\beta_{2j} \rightarrow 0$ (or power goes to 1) implying that $p_{10} \rightarrow \frac{1}{k} \sum\limits_{j=1}^k \beta_{1j}$ and $p$
+
+
