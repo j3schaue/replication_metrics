@@ -1,38 +1,116 @@
 .llllllllllllllllllllllllllllllllll..#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source("./src/metrics_funs.R")
-### Case 1 different thetas but same power
-N<- 100000 
-tmatrix<-matrix(data = NA, nrow = N, ncol = 3)
-for (k in 1:N){
+
+ttestsim<-function(N, theta1,theta2, theta3, powern1, powern2, powern3){
   
-  t1<-rep(.2, 100) # Small theta values
-  sim_1_small<-simulate_studies(t1, 4/(2*393)) # 393 sample size needed for 80% power is small 
-  t2<-rep(.5, 100) # medium theta values
-  sim_1_med<-simulate_studies(t2, 4/(2*64)) # 64 is samples size needed for 80% power if medium
-  t3<-rep(.8,100) # large theta values
-  sim_1_large<-simulate_studies(t3, 4/(2*25)) # 25 is samples size needed for 80% power if medium
+  #############################################
+  # TAKES: N; Number of simulations
+  #       theta1; theta coulmn 1
+  #       theta2; theta coulmn 2
+  #       theta3; theta coulmn 3
+  #       powern1; sample size needed for given power given theta 1
+  #       powern2; sample size needed for given power given theta 2
+  #       powern3; sample size needed for given power given theta 3
+  #
+  # RETURNS: Nx3 matrix with t statistics for each column
+  #############################################
   
-  #difference in each pvalue
-  diff_smallmed<-sim_1_small$p - sim_1_med$p 
-  diff_smalllarge<-sim_1_small$p - sim_1_large$p 
-  diff_medlarge<-sim_1_med$p - sim_1_large$p 
+  tmatrix<-matrix(data = NA, nrow = N, ncol = 3)
+  for (k in 1:N){
+    
+    t1<-rep(theta1, 100) # theta values column 1
+    sim_1<-simulate_studies(t1, 4/(2*powern1)) # sample size needed for given power depending on theta1 
+    t2<-rep(theta2, 100) # theta values column 2
+    sim_2<-simulate_studies(t2, 4/(2*powern2)) # samples size needed for given power depending on theta2
+    t3<-rep(theta3,100) # theta values column 3
+    sim_3<-simulate_studies(t3, 4/(2*powern3)) # samples size needed for given power depending on theta3
+    
+    #difference in each pvalue
+    diff_1<-sim_1$p - sim_2$p 
+    diff_2<-sim_1$p - sim_3$p 
+    diff_3<-sim_2$p - sim_3$p 
+    
+    # find t statistics
+    # single t statistics for given disparity
+    ts1<- mean(diff_1)/(sd(diff_1)/10)
+    ts2<- mean(diff_2)/(sd(diff_2)/10)
+    ts3<- mean(diff_3)/(sd(diff_3)/10)
+    
+    tmatrix[k,1]<-ts1
+    tmatrix[k,2]<-ts2
+    tmatrix[k,3]<-ts3
+    
+  }
   
-  # find t statistics
-  # single t statistics for given disparity
-  tsmallmed<- mean(diff_smallmed)/(sd(diff_smallmed)/10)
-  tsmalllarge<- mean(diff_smalllarge)/(sd(diff_smalllarge)/10)
-  tmedlarge<- mean(diff_medlarge)/(sd(diff_medlarge)/10)
-  
-  tmatrix[k,1]<-tsmallmed
-  tmatrix[k,2]<-tsmalllarge
-  tmatrix[k,3]<-tmedlarge
+  return(tmatrix)
   
 }
 
-sum(abs(tmatrix[,1]) > 1.98)/N # prob of test concluding that they are different for small and meduim differences
-sum(abs(tmatrix[,2]) > 1.98)/N # prob of test concluding that they are different for small and large differences
-sum(abs(tmatrix[,3]) > 1.98)/N # prob of test concluding that they are different for medium and large differences
+### Case 1 different thetas but same power
+N<- 100000 
+tab<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(c("Power 80", "Power 60", "Power 40"), c("Org. 0.2 Rep. 0.5", "Org. 0.2 Rep. 0.8", "Org. 0.5 Rep. 0.8")))
+# 80 % power
+theta1<-0.2
+theta2<-0.5
+theta3<-0.8
 
+n1<-393
+n2<-63
+n3<-25
+
+power80diff<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
+
+tab[1,1]<-sum(abs(power80diff[,1]) > 1.98)/N # prob of test concluding that they are different for small and meduim differences
+tab[1,2]<-sum(abs(power80diff[,2]) > 1.98)/N # prob of test concluding that they are different for small and large differences
+tab[1,3]<-sum(abs(power80diff[,3]) > 1.98)/N # prob of test concluding that they are different for medium and large differences
+
+# 60% power
+theta1<-0.2
+theta2<-0.5
+theta3<-0.8
+
+n1<-245
+n2<-40
+n3<-16
+
+power60diff<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
+
+tab[2,1]<-sum(abs(power60diff[,1]) > 1.98)/N # prob of test concluding that they are different for small and meduim differences
+tab[2,2]<-sum(abs(power60diff[,2]) > 1.98)/N # prob of test concluding that they are different for small and large differences
+tab[2,3]<-sum(abs(power60diff[,3]) > 1.98)/N # prob of test concluding that they are different for medium and large differences
+
+# 40% power
+
+theta1<-0.2
+theta2<-0.5
+theta3<-0.8
+
+n1<-147
+n2<-24
+n3<-10
+
+power40diff<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
+
+tab[3,1]<-sum(abs(power40diff[,1]) > 1.98)/N # prob of test concluding that they are different for small and meduim differences
+tab[3,2]<-sum(abs(power40diff[,2]) > 1.98)/N # prob of test concluding that they are different for small and large differences
+tab[3,3]<-sum(abs(power40diff[,3]) > 1.98)/N # prob of test concluding that they are different for medium and large differences
+
+tab
 
 ## Case 2 same thetas with different powers
-  
+tab2<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(c( "0.2", "0.5", "0.8"), c("Power 40/Power 60", "Power 40/Power 80", "Power 60/Power 80")))
+# theta 0.2 with power 40,60,80
+theta1<-0.2
+theta2<-0.2
+theta3<-0.2
+
+n1<-147
+n2<-245
+n3<-393
+
+thetasmall<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
+
+tab2[1,1]<-sum(abs(thetasmall[,1]) > 1.98)/N # prob of test concluding that they are different for small and meduim differences
+tab2[1,2]<-sum(abs(thetasmall[,2]) > 1.98)/N # prob of test concluding that they are different for small and large differences
+tab2[1,3]<-sum(abs(thetasmall[,3]) > 1.98)/N # prob of test concluding that they are different for medium and large differences
+
