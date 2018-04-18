@@ -110,7 +110,38 @@ n3<-393
 
 thetasmall<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
 
-tab2[1,1]<-sum(abs(thetasmall[,1]) > 1.98)/N # prob of test concluding that they are different for small and meduim differences
-tab2[1,2]<-sum(abs(thetasmall[,2]) > 1.98)/N # prob of test concluding that they are different for small and large differences
-tab2[1,3]<-sum(abs(thetasmall[,3]) > 1.98)/N # prob of test concluding that they are different for medium and large differences
+tab2[1,1]<-sum(abs(thetasmall[,1]) > 1.98)/N # prob of test concluding that they are different for 40 and 60 power
+tab2[1,2]<-sum(abs(thetasmall[,2]) > 1.98)/N # prob of test concluding that they are different for 40 and 80 power
+tab2[1,3]<-sum(abs(thetasmall[,3]) > 1.98)/N # prob of test concluding that they are different for 60 and 80 power
 
+# theta 0.5 with power 40,60,80
+theta1<-0.5
+theta2<-0.5
+theta3<-0.5
+
+n1<-24
+n2<-40
+n3<-63
+
+thetamed<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
+
+tab2[2,1]<-sum(abs(thetamed[,1]) > 1.98)/N # prob of test concluding that they are different for 40 and 60 power
+tab2[2,2]<-sum(abs(thetamed[,2]) > 1.98)/N # prob of test concluding that they are different for 40 and 80 power
+tab2[2,3]<-sum(abs(thetamed[,3]) > 1.98)/N # prob of test concluding that they are different for 60 and 80 power
+
+# theta 0.8 with power 40,60,80
+theta1<-0.8
+theta2<-0.8
+theta3<-0.8
+
+n1<-10
+n2<-16
+n3<-25
+
+thetalarge<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
+
+tab2[3,1]<-sum(abs(thetalarge[,1]) > 1.98)/N # prob of test concluding that they are different for 40 and 60 power
+tab2[3,2]<-sum(abs(thetalarge[,2]) > 1.98)/N # prob of test concluding that they are different for 40 and 80 power
+tab2[3,3]<-sum(abs(thetalarge[,3]) > 1.98)/N # prob of test concluding that they are different for 60 and 80 power
+
+tab2
