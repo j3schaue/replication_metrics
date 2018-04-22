@@ -1,0 +1,90 @@
+
+\documentclass{article}
+
+%\usepackage[margin=1.0in]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage[hidelinks]{hyperref}
+
+	\addtolength{\oddsidemargin}{-.875in}
+	\addtolength{\evensidemargin}{-.875in}
+	\addtolength{\textwidth}{1.75in}
+
+	\addtolength{\topmargin}{-.875in}
+	\addtolength{\textheight}{1.75in}
+
+%\def\labelitemi{--}
+%\doublespacing
+
+\title{\textsc{Properties of Methods for Assessing Replication}}
+\author{Mena Whalen \&\ Sarah Peko-Spicer}
+
+\begin{document}
+
+\maketitle
+
+We first consider the case in which original and replication studies are equally powered but differ in terms of the true effect sizes. [Include more thorough description of table.]
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ | l | c | c | c |}
+\hline\hline
+& \textbf{0.2/0.5} & \textbf{0.5/0.8} & \textbf{0.2/0.8} \\
+\hline
+\textbf{40\%\ Power} & & & \\
+\hspace{3mm} McNemar's & .0570(.0059) & .0537(.0072) & .0524(.0071) \\
+\hspace{3mm} T Test & .0522(.0066) & .0645(.0077) & .0727(.0081) \\
+\hline
+\textbf{60\%\ Power} & & & \\
+\hspace{3mm} McNemar's & .0564(.0071) & .0584(.0067) & .0549(.0067)  \\
+\hspace{3mm} T Test & .0516(.0069) & .0525(.0068) & .0575(.0074) \\
+\hline
+\textbf{80\%\ Power} & & & \\
+\hspace{3mm} McNemar's & .0708(.0086) & .0712(.0095) & .0705(.0080)  \\
+\hspace{3mm} T Test & .0479(.0061) & .0498(.0064) & .0489(.0063) \\
+\hline\hline
+\end{tabular}
+\caption{Probability of rejecting the null hypothesis of the T test or McNemar's Test given...}
+\end{table}
+
+We then consider the case in which original and replication studies have the same true effect sizes but differ in terms of power. [Include more thorough description of table.]
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ | l | c | c | c |}
+\hline\hline
+& \textbf{40/60} & \textbf{60/80} & \textbf{40/80} \\
+\hline
+\textbf{$\theta = 0.2$} & & & \\
+\hspace{3mm} McNemar's & .9989(.0011) & .9995(.0006) & 1(0)  \\
+\hspace{3mm} T Test & .8523(.0117) & .8151(.0128) & .9999(.0003)  \\
+\hline
+\textbf{$\theta = 0.5$} & & & \\
+\hspace{3mm} McNemar's & .9990(.0009) & .9992(.0008)  & 1(0)  \\
+\hspace{3mm} T Test & .8298(.0117) & .8191(.0125) & .9999(.0003) \\
+\hline
+\textbf{$\theta = 0.8$} & & & \\
+\hspace{3mm} McNemar's & .9986(.0011) & .9991(.0008) & 1(0)  \\
+\hspace{3mm} T Test & .8162(.0130) & .7645(.0155) & .9998(.0004) \\
+\hline\hline
+\end{tabular}
+\caption{Probability of rejecting the null hypothesis of the T test or McNemar's Test given...}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
