@@ -47,4 +47,6 @@ replicate_power<-data.frame(n,power_delta_0.2=power_fun(0.2,2/n),power_delta_0.5
 delta_0.2_n_745<-power_sims(100000,1,0.2,745) #100% power to detect originally with largest n=384351.5, so move to n=745: power_fisher=0.08206
 delta_0.5_n_159<-power_sims(100000,1,0.5,159) #100% power to detect originally with n=573, moved to n=159: power_fisher=0.08676
 delta_0.8_large_n<-power_sims(100000,M,0.8,n) #start at n=100 power_fisher=0.09329
+delta_0.2_large_n<-power_sims(100000,M,0.2,n) #start at n=745 power_fisher=0.0
+delta_0.5_large_n<-power_sims(100000,M,0.5,n) #start at n=573 power_fisher=0.0
 
