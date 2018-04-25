@@ -178,7 +178,7 @@ tab2
 
 
 tab3<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(c( "0.2", "0.5", "0.8"), c("Power 50/Power 60", "Power 50/Power 90", "Power 60/Power 90")))
-# theta 0.2 with power 40,60,80
+# theta 0.2 with power 50,60,90
 theta1<-0.2
 theta2<-0.2
 theta3<-0.2
