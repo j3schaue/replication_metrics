@@ -61,11 +61,12 @@ return(tab)
 
 N<-1000
 theta<-c(0.2,0.5,0.8)
-power40<-c(147,24,10)
-power60<-c(245,40,16)
-power80<-c(393,63,25)
+power40<-c(145.6332,23.30131,9.102075)
+power60<-c(244.9453,39.19124,15.309079)
+power80<-c(392.4541,62.79265,24.528380)
 row<-c("Power 80", "Power 60", "Power 40")
 col<-c("Theta 0.2/0.5", "Theta 0.2/0.8", "Theta 0.5/0.8")
+#Done table
 c1table<-case1tab(N,theta, power40,power60, power80, row, col)
 
 boot1<-replicate(100, case1tab(N,theta, power80,power60, power40, row, col))
@@ -140,10 +141,10 @@ case2tab<-function(N, theta, powern1, powern2, powern3, rowNames, colNames){
 ###################################
 
 N<-1000
-theta<-c(0.2,0.5,0.8)
-power40<-c(147,24,10)
-power60<-c(245,40,16)
-power80<-c(393,63,25)
+#theta<-c(0.2,0.5,0.8)
+#power40<-c(147,24,10)
+#power60<-c(245,40,16)
+#power80<-c(393,63,25)
 row<-c("Theta 0.2", "Theta 0.5", "Theta 0.8")
 col<-c("Power 40/60", "Power 40/80", "Power 60/80")
 c2table<-case2tab(N,theta, power80,power60, power40, row, col)
