@@ -11,7 +11,7 @@ power_sims<-function(N,M,delta,n){
   Power<-matrix() #empty matrix to store results
   for(k in 1:length(M)){
     for (i in 1:N){
-      #print(i) #uncomment to show progress for lengthy simulations
+      print(i) #uncomment to show progress for lengthy simulations
       p0<-runif(64-M[k],0.05,1) #draws p-values for the true negatives
       p1<-c() 
       for (j in 1:M[k]){
@@ -19,7 +19,7 @@ power_sims<-function(N,M,delta,n){
         while (p1[j]<=0.05) { #throw away p-values<=0.05
           p1[j]<-2*(1-pnorm(abs(rnorm(1,delta,sqrt(2/n[j])))/sqrt(2/n[j])))
         }
-        #print(n[j]) #uncomment to show progress for lengthy simulations 
+        print(n[j]) #uncomment to show progress for lengthy simulations 
       }
       #test statistic for Fisher's method, with transformation for truncating p-values
       T[i]<--2*sum(log((p0-0.05)/0.95))-2*sum(log((p1-0.05)/0.95)) 
@@ -43,10 +43,18 @@ rpp_data<-read.csv("~/Desktop/NU/Replication/replication_metrics/data/rpp_data.c
 data_forFisher<- rpp_data[ !is.na(rpp_data$T_pval_USE..R.) & (rpp_data$T_pval_USE..R.>0.05)  , ]
 n<-sort(data_forFisher$N..R.,decreasing=TRUE)/2
 
+source("./src/metrics_funs.R")
 replicate_power<-data.frame(n,power_delta_0.2=power_fun(0.2,2/n),power_delta_0.5=power_fun(0.5,2/n),power_delta_0.8=power_fun(0.8,2/n))
-delta_0.2_n_745<-power_sims(100000,1,0.2,745) #100% power to detect originally with largest n=384351.5, so move to n=745: power_fisher=0.08206
-delta_0.5_n_159<-power_sims(100000,1,0.5,159) #100% power to detect originally with n=573, moved to n=159: power_fisher=0.08676
-delta_0.8_large_n<-power_sims(100000,M,0.8,n) #start at n=100 power_fisher=0.09329
-delta_0.2_large_n<-power_sims(100000,M,0.2,n) #start at n=745 power_fisher=0.0
-delta_0.5_large_n<-power_sims(100000,M,0.5,n) #start at n=573 power_fisher=0.0
+#set largest to be the largest sample size among the studies for which there was at most 99.99% power for a given delta
+n_delta_0.2<-c(745,n[2:64]) #largest study had >99.99% power to detect delta=0.2
+n_delta_0.5<-c(rep(159,3),n[4:64])#3 largest studies had >99.99% power to detect delta=0.5
+n_delta_0.8<-c(rep(100,11),n[12:64]) #11 largest studies had >99.99% power to detect delta=0.8
+delta_0.2_large_n<-power_sims(100000,M,0.2,n_delta_0.2) #starts at n=745
+delta_0.5_large_n<-power_sims(100000,M,0.5,n_delta_0.5) #starts at n=159
+delta_0.8_large_n<-power_sims(100000,M,0.8,n_delta_0.8) #starts at n=100
+
+large_n_used<-data.frame(n_delta_0.2,n_delta_0.5,n_delta_0.8)
+power_large_n<-data.frame(M,delta_0.2_large_n,delta_0.5_large_n,delta_0.8_large_n)
+saveRDS(power_large_n,"power_large_n.RDS")
+saveRDS(large_n_used,"large_n_used.RDS")
 
