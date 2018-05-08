@@ -39,11 +39,11 @@ ttestsim<-function(N, theta1,theta2, theta3, powern1, powern2, powern3){
   for (k in 1:N){
     
     t1<-rep(theta1, 100) # theta values column 1
-    sim_1<-simulate_studies(t1, 4/(2*powern1)) # sample size needed for given power depending on theta1 
+    sim_1<-simulate_studies(t1, 2/(powern1)) # sample size needed for given power depending on theta1 
     t2<-rep(theta2, 100) # theta values column 2
-    sim_2<-simulate_studies(t2, 4/(2*powern2)) # samples size needed for given power depending on theta2
+    sim_2<-simulate_studies(t2, 2/(powern2)) # samples size needed for given power depending on theta2
     t3<-rep(theta3,100) # theta values column 3
-    sim_3<-simulate_studies(t3, 4/(2*powern3)) # samples size needed for given power depending on theta3
+    sim_3<-simulate_studies(t3, 2/(powern3)) # samples size needed for given power depending on theta3
     
     #difference in each pvalue
     diff_1<-sim_1$p - sim_2$p 
