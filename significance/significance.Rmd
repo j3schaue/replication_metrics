@@ -88,12 +88,14 @@ Thus, the type I error rate is given by
 <!-- \end{align} -->
 <!-- Under the model, this can be written as  -->
 \begin{align*}
-\text{level }
+P[\text{Type I Error}]
 & = [1 - \Phi\left(1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(1.96 - \theta/\sqrt{v_2}\right)\\ 
 & + \Phi\left(1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(1.96 - \theta/\sqrt{v_2}\right)]\\ 
 & + \Phi\left(-1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)]\\
 & + [1 - \Phi\left(-1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)
 \end{align*}
+\noindent
+where $\Phi$ is the standard normal distribution function.
 
 When $\theta_1 = \theta_2 = 0$, so that both studies involve null effects, then the type I error rate is 9.5\%.
 However, when $\theta_1 = \theta_2 \neq 0$, the frequency of type I errors depends on the power of each study to detect a non-null effect.
@@ -113,8 +115,40 @@ Thus, unless study 1 has at least 95\% power, determining if studies replicated 
 falsepos_plt
 ```
 
-
 Conversely, if we assume $\theta_1 \neq \theta_2$, then we would want the test to reject the null hypothesis frequently---that is, we would want a low type II error rate.
+To conclude that the studies do not replicate would require one finding to be significant and in one direction (e.g., positive), and the other to be either nonsignificant or significant but in the opposite direction (e.g., negative).
+Under the model, the probability of concluding that the studies do replicate when $\theta_1 \neq \theta_2$ can be written as:
+\begin{align*}
+P[\text{Type II Error}]
+& = [1 - \Phi\left(1.96 - \theta_1/\sqrt{v_1}\right)][1 - \Phi\left(1.96 - \theta_2/\sqrt{v_2}\right)]\\ 
+& + [\Phi\left(1.96 - \theta_1/\sqrt{v_1}\right) - \Phi\left(-1.96 - \theta_1/\sqrt{v_1}\right)]
+    [\Phi\left(1.96 - \theta_2/\sqrt{v_2}\right) - \Phi\left(-1.96 - \theta_2/\sqrt{v_2}\right)]\\ 
+& + \Phi\left(-1.96 - \theta_1/\sqrt{v_1}\right) \Phi\left(-1.96 - \theta_2/\sqrt{v_2}\right)
+\end{align*}
+
+When one of the effect parameters, say $\theta_2$ is equal to zero, then this can be written in terms of the power of the other study:
+\[
+P[\text{Type II Error}]
+ = .05 + 0.95 \beta_1
+\]
+where $1 - \beta_1$ is the power of study 1. 
+Thus, if study 1 has low power, so that $\beta_1$ is large, then this test would be likely to conclude that the studies successfully replicated. 
+For instance, if study 1 has power 80\%, then this test would conclude that the studies do not replicate 24\% of the time. 
+However, if the power were lower, say 60\%, then the test would make this error 43\% of the time.
+
+If both of the results are nonzero but the same direction (e.g., both positive), then the error rate will be large whenever both studies have high (or low) power. 
+For instance, if $\theta_1$ is much larger than $\theta_2$, but both have power 80\%, then this test will conclude that the studies replicate almost 68\% of the time! 
+Similarly, if both studies have low power then there is a higher probability that both will return nonsignificant results, and hence we would conclude that the studies replicated despite $\theta_1 \neq \theta_2$.
+In fact, the only way for the false negative rate to decrease is for one study to have very high power, and the other to have very low power.
+
+In summary, the properties of this metric will depend heavily on the power of each study to detect a non-null effect, but in a way that can be counterintuitive.
+If the studies replicate exactly, then this test will falsely conclude that they do not a large percentage of the time unless both either have very high power (e.g., >90\%) or very low power (e.g., < 10\%).
+Moreover, it will be difficult to find scenarios where the type I error rate is below 9.5\%, and realistically could be much higher than that.
+Conversely, if the studies involve very different effect parameters, the test will often conclude that studes replicate. 
+If effects are in the same direction, the power of this test will decrease in the sample size of each individual experiment. 
+Only if one effect is positive and the other is null or negative will the error rate decrease with sample size.
+In other words, there are fairly plausible scenarios where collecting more data---having larger studies---can \textit{increase} the type I or type II error rates of this test!
+
 
 
 
