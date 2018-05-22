@@ -40,7 +40,7 @@ This "true" effect reflects what the researcher would observe if they had an inf
 Effect parameters are typically on a standard scale, such as a standardized mean difference, Fisher-transformed correlation coefficient, or log-odds ratio.
 
 In the context of replication studies, we have at least $k \geq 2$ such findings, so let $\theta_i$ describe the results of the $i$th study.
-For programs such as that of the OSC, this invovles $\theta_1$ for the original study and $\theta_2$ for the replicate.
+For programs such as that of the OSC, this involves $\theta_1$ for the original study and $\theta_2$ for the replicate.
 However, we do not actually observe $\theta_1$ and $\theta_2$, and instead we estimate them by $T_1$ and $T_2$, and these estimates have variances $v_1$ and $v_2$.
 The estimates and their variances are what get reported in typical statistical analyses of experiments.
 
@@ -66,7 +66,7 @@ Note that this is not the only structure we might infer here, and is not even th
 # Correspondence in Statistical Significance
 
 One metric used by the OSC to determine if studies successfully replicated to to check that both the original and replicate study corresponded in sign and statistical significance.
-That is, findings were deemed to have replcated if both studies found significant effects in the same direction---i.e., both positive---or if both studies found null effects.
+That is, findings were deemed to have replicated if both studies found significant effects in the same direction---i.e., both positive---or if both studies found null effects.
 This type of metric would seem to answer an important question about replication, particularly of published research which more often involves statistically significant findings.
 Indeed, Fisher (1935) noted that "we may say that a phenomenon is experimentally demonstrable when we know how to conduct an experiment which will rarely fail to give us statistically significant results."
 
@@ -109,7 +109,7 @@ Indeed, if study 2 had an infinite sample size, so that $v_2 \to 0$ and $\theta_
 \text{Error rate } \to \beta_1
 \]
 where $1 - \beta_1$ is the power of study 1.
-Thus, unless study 1 has at least 95\% power, determining if studies replicated according to correspondence of sign and statisitical significance can result in type I error rates well above 5\%.
+Thus, unless study 1 has at least 95\% power, determining if studies replicated according to correspondence of sign and statistical significance can result in type I error rates well above 5\%.
 
 ```{r, echo=F, message=F, fig.cap = "False Positive Rate of Test for Replication. This plot displays the false positive rate of determining replication according to correspondence of sign and statistical significance as a function of the size of study 1 and study 2. Each colored line corresponds to study 2 being a multiple of the size of study 1. The dashed line corresponds to a 5\\% false positive rate. \\label{fig:sig:falsepos}"}
 falsepos_plt
@@ -144,7 +144,7 @@ In fact, the only way for the false negative rate to decrease is for one study t
 In summary, the properties of this metric will depend heavily on the power of each study to detect a non-null effect, but in a way that can be counterintuitive.
 If the studies replicate exactly, then this test will falsely conclude that they do not a large percentage of the time unless both either have very high power (e.g., >90\%) or very low power (e.g., < 10\%).
 Moreover, it will be difficult to find scenarios where the type I error rate is below 9.5\%, and realistically could be much higher than that.
-Conversely, if the studies involve very different effect parameters, the test will often conclude that studes replicate. 
+Conversely, if the studies involve very different effect parameters, the test will often conclude that studies replicate. 
 If effects are in the same direction, the power of this test will decrease in the sample size of each individual experiment. 
 Only if one effect is positive and the other is null or negative will the error rate decrease with sample size.
 In other words, there are fairly plausible scenarios where collecting more data---having larger studies---can \textit{increase} the type I or type II error rates of this test!
