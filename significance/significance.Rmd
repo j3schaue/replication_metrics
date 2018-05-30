@@ -44,6 +44,13 @@ For programs such as that of the OSC, this involves $\theta_1$ for the original 
 However, we do not actually observe $\theta_1$ and $\theta_2$, and instead we estimate them by $T_1$ and $T_2$, and these estimates have variances $v_1$ and $v_2$.
 The estimates and their variances are what get reported in typical statistical analyses of experiments.
 
+A common assumption in meta-analysis is that the $T_i$ are independent, unbiased, normally distributed, and have a known variance, that is:
+\[
+T_i \stackrel{indep}{\sim} N(\theta_i, v_i)
+\]
+This is true for effect sizes such as $z$-transformed correlations, and is a large sample approximation for other effect sizes such as standardized and raw mean differences and log-odds ratios.
+Further, in this paper, we assume that within-study hypothesis tests involve $H_0: \theta_i = 0$, and are carried out at the $\alpha = 0.05$ level.
+
 We argue that one useful definition of replication involves the similarity not of estimates $T_i$, but of actual true effects $\theta_i$.
 The $T_i$ might differ because of both differences in the underlying true effects, but also due to random chance.
 The same can be said for the resulting $p$-values---$p_1$ and $p_2$.
@@ -60,7 +67,7 @@ The key distinction here, is that the \textit{definition} of replication involve
 For this paper, we interpret the OSC analyses in the tradition of statistical hypothesis testing.
 Each analysis can be seen of a test of the null hypothesis $H_0: \theta_1 = \theta_2$, the metric used can be seen as a test statistic, and determinations that a finding failed to replicate correspond to a rejection of this null hypothesis.
 Note that this is not the only structure we might infer here, and is not even the only way to operationalize these methods as hypothesis tests.
-
+However, it is in the tradition of statistical hypothesis tests about heterogeneity across effects.
 
 
 # Correspondence in Statistical Significance
@@ -71,7 +78,7 @@ This type of metric would seem to answer an important question about replication
 Indeed, Fisher (1935) noted that "we may say that a phenomenon is experimentally demonstrable when we know how to conduct an experiment which will rarely fail to give us statistically significant results."
 
 However, it has long been noted that differences between significant and nonsignificant findings need not correspond to differences in underlying effect parameters (e.g., Gelman & Stern, 2005). 
-Thus, it is entirely possible that $\theta_1 = \theta_2 > 0$, so that the studies replicate exactly, but only $T_1$ is statistically significant.
+Thus, it is entirely possible that $\theta_1 = \theta_2$, so that the studies replicate exactly, but only $T_1$ is statistically significant.
 Alternatively, it could happen that $\theta_1$ and $\theta_2$ are markedly different, but both studies involve statistically significant estimates.
 
 To get a sense of the properties of this test, assume that $\theta_1 = \theta_2 = \theta$, or that the studies replicate exactly.
@@ -90,9 +97,9 @@ Thus, the type I error rate is given by
 \begin{align*}
 P[\text{Type I Error}]
 & = [1 - \Phi\left(1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(1.96 - \theta/\sqrt{v_2}\right)\\ 
-& + \Phi\left(1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(1.96 - \theta/\sqrt{v_2}\right)]\\ 
-& + \Phi\left(-1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)]\\
-& + [1 - \Phi\left(-1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)
+&\quad + \Phi\left(1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(1.96 - \theta/\sqrt{v_2}\right)]\\ 
+&\quad + \Phi\left(-1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)]\\
+&\quad + [1 - \Phi\left(-1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)
 \end{align*}
 \noindent
 where $\Phi$ is the standard normal distribution function.
@@ -116,7 +123,7 @@ falsepos_plt
 ```
 
 Conversely, if we assume $\theta_1 \neq \theta_2$, then we would want the test to reject the null hypothesis frequently---that is, we would want a low type II error rate.
-To conclude that the studies do not replicate would require one finding to be significant and in one direction (e.g., positive), and the other to be either nonsignificant or significant but in the opposite direction (e.g., negative).
+To conclude that the studies do replicate would require both findings to be significant and in the same direction (e.g., positive), or to both be nonsignificant.
 Under the model, the probability of concluding that the studies do replicate when $\theta_1 \neq \theta_2$ can be written as:
 \begin{align*}
 P[\text{Type II Error}]
@@ -129,12 +136,12 @@ P[\text{Type II Error}]
 When one of the effect parameters, say $\theta_2$ is equal to zero, then this can be written in terms of the power of the other study:
 \[
 P[\text{Type II Error}]
- = .05 + 0.95 \beta_1
+ = 0.025 + 0.925 \beta_1
 \]
 where $1 - \beta_1$ is the power of study 1. 
 Thus, if study 1 has low power, so that $\beta_1$ is large, then this test would be likely to conclude that the studies successfully replicated. 
-For instance, if study 1 has power 80\%, then this test would conclude that the studies do not replicate 24\% of the time. 
-However, if the power were lower, say 60\%, then the test would make this error 43\% of the time.
+For instance, if study 1 has power 80\%, then this test would conclude that the studies do not replicate 21\% of the time. 
+However, if the power were lower, say 60\%, then the test would make this error 39.5\% of the time.
 
 If both of the results are nonzero but the same direction (e.g., both positive), then the error rate will be large whenever both studies have high (or low) power. 
 For instance, if $\theta_1$ is much larger than $\theta_2$, but both have power 80\%, then this test will conclude that the studies replicate almost 68\% of the time! 
