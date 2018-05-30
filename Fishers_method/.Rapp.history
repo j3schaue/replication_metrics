@@ -1,0 +1,4 @@
+load("/Users/Katie 1/Desktop/NU/Replication/replication_metrics/Fishers_method/power sims table with changing n.RDS")
+load("/Users/Katie 1/Desktop/NU/Replication/replication_metrics/Fishers_method/power_large_n.RDS")
+load("/Users/Katie 1/Desktop/NU/Replication/replication_metrics/Fishers_method/power sims table with changing n.RDS")
+load("/Users/Katie 1/Desktop/NU/Replication/replication_metrics/Fishers_method/power_large_n.RDS")

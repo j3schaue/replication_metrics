@@ -3,51 +3,158 @@ title: "Correspondence in Significance"
 output: pdf_document
 ---
 
-Programs of research that examine the replicability of research findings have become more common in psychology. 
-However, there is some ambiguity over how to assess the findings of such programs; that is, how do we know if a finding has been replicated?
-The Open Science Collaboration (2015) argue, "There is no single standard for evaluating replication success," and then analyzed replicate pairs in a variety of ways.
-Subsequent programs have used some of these same analysis methods (e.g., Camerer, et al., 2016; Schweinsberg, et al., 2016).
-
-It is not entirely clear what these methods say about replication.
-For one, an actual definition of replication remains somewhat elusive---or flexible---across these methods. 
-Saying that studies get "the same result" is somewhat subjective, and the OSC attempted to operationalize this by describing several different scenarios of studies getting "the same result".
-Moreover, interpreting the results of the OSC analyses also requires knowledge of the properties of the methods they (and others) use.
-For instance, how sensitive are these analyses? 
-The irony is that answering this second question, in some ways, requires an answer to the former: how do we define replication?
-
-In this paper, we clarify subjective notions about replication using a meta-analytic framework. 
-Given this definition, we then evaluate various analysis methods to determine their properties.
+```{r, echo=F, warning=F, message=F}
+source("./code/error_rates.R")
+```
 
 
-# Defining Successful Replication: Meta-analytic Perspectives
+Programs of research that examine the replicability of research findings have become more common in the social sciences. 
+On its face, assessing replication seems trivial: just repeat an experiment and check that you get the same results.
+However analyses of these programs reveal that we might mean several different things when we refer to "the same results."
+Indeed, the Open Science Collaboration (OSC) (2015) argued, "There is no single standard for evaluating replication success," and then analyzed replicate pairs in a variety of ways.
 
-Meta-analysis represents the "results" of an experiment by an effect parameter, denoted $\theta$.
+Despite immediate criticism of the analyses (see Gilbert, Pettigrew, and King, 2015), the core set of OSC analyses has become something of a standard in replication research.
+Camerer, et al. (2016) conducted an almost identical research design with the same analytic methods on findings in experimental economics. 
+Schweinsberg, et al. (2016), while conducting several---i.e., more than one---replicates of the same findings, aggregated replicate results so that they could use the same analyses as the OSC.
+Thus, the idea that replication is impossible to assess has persisted across multiple high-profile replication research efforts.
+
+Given their prevalence in the replication literature, the analyses conducted by the OSC have a few important aspects worth exploring.
+The first involves the definitions of replication that they imply. 
+For instance, comparing $p$-values versus effect estimates may suggest very different ways we may think about studies' "results" and whether they are "the same."
+The second are the properties of the methods used to assess definitions of replication.
+For most replication studies, authors seek to make determinations about whether a finding was successfully replicated.
+Doing so amid uncertainty---such as in effect estimates---runs into similar issues of null hypothesis tests. 
+Thus, unambiguous interpretation of the results of replication research, can depend on the properties of the methods authors use to make these determinations.
+
+In this paper, we explore methods for assessing replication as proposed by the OSC.
+We argue that definitions of replication ought to involve effect parameters, rather than $p$-values. 
+Using this logic, we then frame the set of analyses common in replication research as null hypothesis tests about replication. 
+The properties of these tests are computed under some simplifying assumptions, and shown that there are conditions where they may be suboptimal.
+
+
+# Model & Framework
+
+One approach to assessing replication proceeds from standard meta-analytic models. 
+Meta-analysis represents the results of an experiment by an effect parameter, denoted $\theta$.
 This "true" effect reflects what the researcher would observe if they had an infinite sample size.
 Effect parameters are typically on a standard scale, such as a standardized mean difference, Fisher-transformed correlation coefficient, or log-odds ratio.
 
 In the context of replication studies, we have at least $k \geq 2$ such findings, so let $\theta_i$ describe the results of the $i$th study.
-For the RPP and RPE programs, this invovles $\theta_1$ for the original study and $\theta_2$ for the replicate.
+For programs such as that of the OSC, this involves $\theta_1$ for the original study and $\theta_2$ for the replicate.
 However, we do not actually observe $\theta_1$ and $\theta_2$, and instead we estimate them by $T_1$ and $T_2$, and these estimates have variances $v_1$ and $v_2$.
 The estimates and their variances are what get reported in typical statistical analyses of experiments.
 
+A common assumption in meta-analysis is that the $T_i$ are independent, unbiased, normally distributed, and have a known variance, that is:
+\[
+T_i \stackrel{indep}{\sim} N(\theta_i, v_i)
+\]
+This is true for effect sizes such as $z$-transformed correlations, and is a large sample approximation for other effect sizes such as standardized and raw mean differences and log-odds ratios.
+Further, in this paper, we assume that within-study hypothesis tests involve $H_0: \theta_i = 0$, and are carried out at the $\alpha = 0.05$ level.
+
 We argue that one useful definition of replication involves the similarity not of estimates $T_i$, but of actual true effects $\theta_i$.
 The $T_i$ might differ because of both differences in the underlying true effects, but also due to random chance.
-The $\theta_i$ might differ, however, because studies sample participants from different populations, or if there are differences in experimental contexts and conditions between experiments.
+The same can be said for the resulting $p$-values---$p_1$ and $p_2$.
+The $\theta_i$ might differ, however, because studies sample participants from different populations, or due to differences in contexts and conditions between experiments.
 Thus, it may make sense to define replication in terms of differences in experiments rather than statistical noise.
-Note that there is a connection to the potential outcomes framework in causal inference; for discussion see Wong and Steiner (2017).
+Note that there is a connection to the potential outcomes framework in causal inference; for discussion see Wong and Steiner (2018).
 
 In that vein, $\theta_1 = \theta_2$ would be a convenient starting point for defining replication.
 However, there is evidence that even in the face of strong theory and sound scientific practice, that studies may still get slightly different results.
-Thus, a more practical definition would say studies replicate if $\theta_1 \approx \theta_2$.
+Thus, a more practical definition might posit that studies replicate if $\theta_1 \approx \theta_2$.
 For further discussion on this distinction see Hedges and Schauer (2018).
-
-The key distinction here, is that the definition of replication involves the parameters $\theta_i$. 
-Analyses of replication involve the estimates $T_i$ and their variances $v_i$, which we use make inferences about how similar the $\theta_i$ are.
-This paradigm allows us to evaluate properties of analysis methods. 
+The key distinction here, is that the \textit{definition} of replication involves the parameters $\theta_i$, while \textit{analyses} involve the estimates $T_i$ and their variances $v_i$
 
 For this paper, we interpret the OSC analyses in the tradition of statistical hypothesis testing.
 Each analysis can be seen of a test of the null hypothesis $H_0: \theta_1 = \theta_2$, the metric used can be seen as a test statistic, and determinations that a finding failed to replicate correspond to a rejection of this null hypothesis.
 Note that this is not the only structure we might infer here, and is not even the only way to operationalize these methods as hypothesis tests.
+However, it is in the tradition of statistical hypothesis tests about heterogeneity across effects.
+
+
+# Correspondence in Statistical Significance
+
+One metric used by the OSC to determine if studies successfully replicated to to check that both the original and replicate study corresponded in sign and statistical significance.
+That is, findings were deemed to have replicated if both studies found significant effects in the same direction---i.e., both positive---or if both studies found null effects.
+This type of metric would seem to answer an important question about replication, particularly of published research which more often involves statistically significant findings.
+Indeed, Fisher (1935) noted that "we may say that a phenomenon is experimentally demonstrable when we know how to conduct an experiment which will rarely fail to give us statistically significant results."
+
+However, it has long been noted that differences between significant and nonsignificant findings need not correspond to differences in underlying effect parameters (e.g., Gelman & Stern, 2005). 
+Thus, it is entirely possible that $\theta_1 = \theta_2$, so that the studies replicate exactly, but only $T_1$ is statistically significant.
+Alternatively, it could happen that $\theta_1$ and $\theta_2$ are markedly different, but both studies involve statistically significant estimates.
+
+To get a sense of the properties of this test, assume that $\theta_1 = \theta_2 = \theta$, or that the studies replicate exactly.
+If this were true, we would want this test to infrequently reject this null hypothesis; in statistical terms, we would want the type I error rate to be low.
+The null hypothesis would be rejected if $T_1$ is significant and $T_2$ is either not significant or significant and has an opposite direction (or visa versa). 
+Thus, the type I error rate is given by
+<!-- \begin{align} -->
+<!-- \begin{split} -->
+<!-- & P[T_1/\sqrt{v_1} > 1.96]P[T_2/\sqrt{v_2} \leq 1.96] +  -->
+<!-- P[T_1/\sqrt{v_1} \leq 1.96]P[T_2/\sqrt{v_2} > 1.96] \\ +  -->
+<!-- & P[T_1/\sqrt{v_1} < -1.96]P[T_2/\sqrt{v_2} \geq -1.96] +  -->
+<!-- P[T_1/\sqrt{v_1} \geq -1.96]P[T_2/\sqrt{v_2} < -1.96] -->
+<!-- \end{split} -->
+<!-- \end{align} -->
+<!-- Under the model, this can be written as  -->
+\begin{align*}
+P[\text{Type I Error}]
+& = [1 - \Phi\left(1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(1.96 - \theta/\sqrt{v_2}\right)\\ 
+&\quad + \Phi\left(1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(1.96 - \theta/\sqrt{v_2}\right)]\\ 
+&\quad + \Phi\left(-1.96 - \theta/\sqrt{v_1}\right) [1 - \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)]\\
+&\quad + [1 - \Phi\left(-1.96 - \theta/\sqrt{v_1}\right)] \Phi\left(-1.96 - \theta/\sqrt{v_2}\right)
+\end{align*}
+\noindent
+where $\Phi$ is the standard normal distribution function.
+
+When $\theta_1 = \theta_2 = 0$, so that both studies involve null effects, then the type I error rate is 9.5\%.
+However, when $\theta_1 = \theta_2 \neq 0$, the frequency of type I errors depends on the power of each study to detect a non-null effect.
+Figure \ref{fig:sig:falsepos} shows the false positive rate of the test as a function of the power of study 1, and the relative size of study 2 to study 1. 
+For instance, if study 1 had 60\% power to detect $\theta_1$ and study 2 had 60\% power to detect $\theta_2$---so that the studies are the same size---then the false positive rate will be just under 50\%!
+
+In Figure \ref{fig:sig:falsepos}, we see that the false positive rates are nearly all above the nominal 5\%. 
+This is not necessarily an artifact of the scale of the graph. 
+Indeed, if study 2 had an infinite sample size, so that $v_2 \to 0$ and $\theta_2/\sqrt{v_2} \to 0$, then the false positive rate of this test for replication converges to one minus the power of the initial study:
+\[
+\text{Error rate } \to \beta_1
+\]
+where $1 - \beta_1$ is the power of study 1.
+Thus, unless study 1 has at least 95\% power, determining if studies replicated according to correspondence of sign and statistical significance can result in type I error rates well above 5\%.
+
+```{r, echo=F, message=F, fig.cap = "False Positive Rate of Test for Replication. This plot displays the false positive rate of determining replication according to correspondence of sign and statistical significance as a function of the size of study 1 and study 2. Each colored line corresponds to study 2 being a multiple of the size of study 1. The dashed line corresponds to a 5\\% false positive rate. \\label{fig:sig:falsepos}"}
+falsepos_plt
+```
+
+Conversely, if we assume $\theta_1 \neq \theta_2$, then we would want the test to reject the null hypothesis frequently---that is, we would want a low type II error rate.
+To conclude that the studies do replicate would require both findings to be significant and in the same direction (e.g., positive), or to both be nonsignificant.
+Under the model, the probability of concluding that the studies do replicate when $\theta_1 \neq \theta_2$ can be written as:
+\begin{align*}
+P[\text{Type II Error}]
+& = [1 - \Phi\left(1.96 - \theta_1/\sqrt{v_1}\right)][1 - \Phi\left(1.96 - \theta_2/\sqrt{v_2}\right)]\\ 
+& + [\Phi\left(1.96 - \theta_1/\sqrt{v_1}\right) - \Phi\left(-1.96 - \theta_1/\sqrt{v_1}\right)]
+    [\Phi\left(1.96 - \theta_2/\sqrt{v_2}\right) - \Phi\left(-1.96 - \theta_2/\sqrt{v_2}\right)]\\ 
+& + \Phi\left(-1.96 - \theta_1/\sqrt{v_1}\right) \Phi\left(-1.96 - \theta_2/\sqrt{v_2}\right)
+\end{align*}
+
+When one of the effect parameters, say $\theta_2$ is equal to zero, then this can be written in terms of the power of the other study:
+\[
+P[\text{Type II Error}]
+ = 0.025 + 0.925 \beta_1
+\]
+where $1 - \beta_1$ is the power of study 1. 
+Thus, if study 1 has low power, so that $\beta_1$ is large, then this test would be likely to conclude that the studies successfully replicated. 
+For instance, if study 1 has power 80\%, then this test would conclude that the studies do not replicate 21\% of the time. 
+However, if the power were lower, say 60\%, then the test would make this error 39.5\% of the time.
+
+If both of the results are nonzero but the same direction (e.g., both positive), then the error rate will be large whenever both studies have high (or low) power. 
+For instance, if $\theta_1$ is much larger than $\theta_2$, but both have power 80\%, then this test will conclude that the studies replicate almost 68\% of the time! 
+Similarly, if both studies have low power then there is a higher probability that both will return nonsignificant results, and hence we would conclude that the studies replicated despite $\theta_1 \neq \theta_2$.
+In fact, the only way for the false negative rate to decrease is for one study to have very high power, and the other to have very low power.
+
+In summary, the properties of this metric will depend heavily on the power of each study to detect a non-null effect, but in a way that can be counterintuitive.
+If the studies replicate exactly, then this test will falsely conclude that they do not a large percentage of the time unless both either have very high power (e.g., >90\%) or very low power (e.g., < 10\%).
+Moreover, it will be difficult to find scenarios where the type I error rate is below 9.5\%, and realistically could be much higher than that.
+Conversely, if the studies involve very different effect parameters, the test will often conclude that studies replicate. 
+If effects are in the same direction, the power of this test will decrease in the sample size of each individual experiment. 
+Only if one effect is positive and the other is null or negative will the error rate decrease with sample size.
+In other words, there are fairly plausible scenarios where collecting more data---having larger studies---can \textit{increase} the type I or type II error rates of this test!
 
 
 
