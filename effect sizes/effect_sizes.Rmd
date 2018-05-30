@@ -18,3 +18,22 @@ S = |T_1 - T_2|/\sqrt{v_2} \leq 1.96
 \]
 This is conceptually identical to testing a null hypothesis of $H_0: \theta_1 = \theta_2$ with test statistic $S$ being compared to a standard normal distribution.
 However, under $H_0$, $S$ does not follow a standard normal distribution.
+Instead, it follows a normal distribution with mean zero and variance $1 + v_1/v_2$. 
+
+If $\theta_1 = \theta_2$, then we would like this test to conclude that the studies replicate.
+This would require $S$ to be smaller than 1.96 in magnitude. 
+The probability that $S$ exceeds 1.96 would be the Type I error rate. 
+The exact error rate is given by:
+\[
+1 - \Phi\left(\frac{1.96}{\sqrt{1 + v_1/v_2}}\right) + \Phi\left(\frac{-1.96}{\sqrt{1 + v_1/v_2}}\right)
+\]
+If study 1 is much larger than study 2, so that $v_1/v_2$ is close to zero, than this error rate will be close to nominal---that is, the Type I error rate will be close to 0.05.
+However, the error rate will be increasing as $v_1/v_2$ gets larger. 
+If both studies are the same size so that $v_1 = v_2$, then the error rate is 32.7\%. 
+If study 2 is twice the size of study 1, so that $v_1 = v_2/2$, then the error rate is 51.4\%. 
+
+[INSERT FIGURE? error rate vs. v1/v2]
+
+If, however, $\theta_1 \neq \theta_2$ we would want the test to determine that the studies do not replicate, so that $S$ is at least as large as 1.96 in magnitude.
+
+
