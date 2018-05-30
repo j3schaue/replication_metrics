@@ -1,0 +1,20 @@
+---
+title: "Effect Sizes"
+output: pdf_document
+---
+
+# Confidence Interval Comparison
+
+Another approach used by the OSC and others to determine if a replication was successful involves confidence intervals. 
+They determined that studies replicated if the estimate from the initial experiment $T_1$ is contained in a 95\% confidence interval for the replication effect parameter $\theta_2$. 
+The logic behind this can be seen in two different ways. 
+On the one hand, it can be conceived of as determining if the effect parameter in the replicate $\theta_2$ is different from the estimate of the initial study $T_1$. 
+Note that they will be equal with probability zero under the model.
+
+Another way to think about this analysis is that it tests whether the underlying effect parameters are the same.
+To see this, note that $T_1$ being contained in the 95\% confidence interval for $\theta_2$ is equivalent to 
+\[
+S = |T_1 - T_2|/\sqrt{v_2} \leq 1.96
+\]
+This is conceptually identical to testing a null hypothesis of $H_0: \theta_1 = \theta_2$ with test statistic $S$ being compared to a standard normal distribution.
+However, under $H_0$, $S$ does not follow a standard normal distribution.
