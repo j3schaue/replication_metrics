@@ -31,7 +31,9 @@ where $\theta_1$ is the parameter from the original and $\theta_2$ from the repl
  
  
 ### Results
- Using simulations to demonstrate Case 1 and Case 2 are presented in Table 1 and Table 2 below. 
+ Using simulations to demonstrate Case 1 and Case 2 are presented in Table 1 and Table 2 below. In each simulation the effect sizes used were small 0.2, medium 0.5, and large 0.8. The powers used were 40,60,80 to range all possible powers that can occur. In Case 1 the rows represent the power of both original and replicate studies and the columns are the different effect sizes of the studies. For example, section (1,1) is if the original study had effect size 0.2 and the replicate had effect size 0.5, or vise versa, and both had 80% power. All results show power around 0.05 or below given the discussion made previously about Case 1. Notice that as the power decreases, going down the rows, the power of the test increases being capped at 0.05. This is from a higher power being able to detect effects easier than a lower powers so when comparing two high power studies with different effect but similar power the p-values will be closer together.For Case 2, the rows are the effect sizes for both orginal and replicate study and the columns are different power of each study. The result in section (1,1) would be the power of the t-test of p-values from the effect size of 0.2 with one study having power 40 and the second study having power 60. All results in the table are over 80% power as dicussed in the precious section since the same sizes are the same but with different powers resulting in different p-values for each resulting in the test saying they studies are not the same. In the second column with power 40 and power 80 the results are almost 1 which is similar to the thought experiment presented eariler since the sample size of the 80% powered test is much larger then the sample size of the 40% powered test, making the higher powered test's variance go to 0.
+ 
+ 
 ```{r tab, echo=FALSE}
 
 source("./bootsims.R")
