@@ -4,38 +4,40 @@ author: "Mena Whalen"
 output: pdf_document
 ---
 
-1. OSF Article
-A) steps list of what they did
-B) why they did it
-
-2. Theory
-why is it bad
-case 1 to case 2
-3. Results sims
-explain table and results
-
-
 ### OSF Article
  In the OSF article the authors used a paired t-test to compare the p-values from the original study with its replicate study for the 100 studies. The authors omit one case where the p-values were unavailable for both original and replicate. The test statistic for the paired t-test looks like $t=\frac{\bar{X}_{Diff}}{\frac{SD_{Diff}}{\sqrt k}}$ where $\bar{X}_{Diff}$ is the mean of all the differences between original and replicate p-values, $SD_{Diff}$ is the standard deviation of those differences from the mean, and $k$ is the number of pairs. The t-test is testing the hypothesis that these two groups are different from one another, meaning that the p-value from the first experiment done is the same p-value as the replicate study done. A paired t-test is used in this case since each study is being compared with its replicate so they are assumed to be controlling the particular experiment being conducted within each of the different groups, original and replicate.
  
  For the 99 pairs available the dependent t-test was done, finding a mean difference to be -0.2738438 showing that the replicate p-values were larger than the original. This leads to a test statistic of -8.2068 and less than 0.0001 p-value. This would lead to saying that the pairs are not the same or that their difference is equal to 0, thus the original studies p-values are not the same and the replicate studies p-values. Leading back to that the original studys' estimate is not the same as the replicates' estimate.
  
 ### Theory
-#pvalues what goes into it
-#power
-#hypothesis meaning (mult. hypothesis)
-#case 1 and case 2 what happens
+
  Using the set up provided with $T_i \sim N(\theta_i, v_i)$, if a study is significant, meaning p-value is less than or equal to 0.05, then $\frac{|T_i|}{\sqrt{v_i}} \geq 1.96$ if testing $H_0:\theta_i =0$. We assume that the variance is known for each study and is $\frac{4}{n}$ where $n$ is the sample size. This means that the test statistic used for determining the p-value is dependent on the size of the estimate and the sample size. This p-value is a random variable coming from the given data, the distribution of which is dependent on the power of the test. The power to detect if $\theta_i$ is statistically different from 0 depends on the estimate $T_i$ and the sample size $n$. Given that each original study and its replicate study has possibly different estimates and sample sizes to calculate its p-value means that the groups could have different statistical power for each test. 
  
- When comparing the p-values of two paired groups using the t-test incorporates each cases' estimate and the sample size of each test. In a single example, say study 1, there would be $p_1$ the p-value from the orginal and $p_2$ the p-value from the replicate study. This is equivalent to $p_1=\Phi^{-1}\Big(\frac{|T_1|}{\sqrt{v_1}}\Big)$ and similar can be shown for $p_2$, so subtracting the two leads to $\Phi^{-1}\Big(\frac{|T_1|}{\sqrt{v_1}}\Big)-\Phi^{-1}\Big(\frac{|T_2|}{\sqrt{v_2}}\Big)$. This is dependent on the power of each statistical test using the $T$'s and $n$'s for each group. This scaled for k studies, the mean of the paired difference of p-values would be 
+ When comparing the p-values of two paired groups using the t-test incorporates each cases' estimate and the sample size of each test. In a single example, say study 1, there would be $p_1$ the p-value from the original and $p_2$ the p-value from the replicate study. This is equivalent to $p_1=\Phi^{-1}\Big(\frac{|T_1|}{\sqrt{v_1}}\Big)$ and similar can be shown for $p_2$, so subtracting the two leads to $\Phi^{-1}\Big(\frac{|T_1|}{\sqrt{v_1}}\Big)-\Phi^{-1}\Big(\frac{|T_2|}{\sqrt{v_2}}\Big)$. This is dependent on the power of each statistical test using the $T$'s and $n$'s for each group. This scaled for k studies, the mean of the paired difference of p-values would be 
 \begin{align}
-\frac{1}{k} \sum_i ^k \Big[ \Phi^{-1}\Big(\frac{|T_i|}{\sqrt{v_i}}\Big)-\Phi^{-1}\Big(\frac{|T_i|}{\sqrt{v_i}}\Big) \Big]
+\frac{1}{k} \sum_j ^k \Big[ \Phi^{-1}\Big(\frac{|T_{1j}|}{\sqrt{v_{1j}}}\Big)-\Phi^{-1}\Big(\frac{|T_{2j}|}{\sqrt{v_{2j}}}\Big) \Big]
 \end{align}
 This mean takes into account both the estimate and the sample size, thus the power to detect if the p-values are different from one another depends upon the power of both the original and the replicate studies. 
 
- In the current situation the t-test is testing if the group of original studies are similar to the group of replicate studies over all studies using p-values to assess similarity. When examining all studies together this takes away from a single study being replicated. Each study is dependent upon the power of both original and replicate being able to detect an effect. This is not the same thing as testing if an individual study did replicate which would relate back in hypothesis test form to 
+ In the current situation the t-test is testing if the group of original studies are similar to the group of replicate studies over all studies using p-values to assess similarity. When examining all studies together this relates back to a single study being replicated. Each study's statistical test is dependent upon the power of both original and replicate being able to detect an effect. This is not the same thing as testing if an individual study did replicate, which would relate back to a hypothesis test of the form 
  \begin{align}
  H_0: \theta_1 = \theta_2 \hspace{1cm} H_A: \theta_1 \neq \theta_2
  \end{align}
 where $\theta_1$ is the parameter from the original and $\theta_2$ from the replicate. 
+
+ The t-test has two types of errors that can occur, one where the effect sizes from original to replicate not the same but the test says that they are not significantly different meaning the p-values are the same and the other is when the effect sizes are the same but the test concludes that the p-values are significantly different from one another. The first instance, which we will call Case 1, can occur when $\theta_{1j} \neq \theta_{2j}$ but the powers are the same, $(1-\beta_{1j}) = (1-\beta_{2j})$. Power is determined by the effect size and the sample size, so when the effect size is small the sample size needs to be bigger to have higher power. If two effect sizes are different but they have the same power their test statistic from the original study's work and the replicate experiment would look identical, $\frac{T_1}{\sqrt{V_1}} = \frac{T_2}{\sqrt{V_2}}$, since we know the $T_i$'s are different from one another then the denominator  would have to be scaled to be the same. The smaller effect size would have a larger samples size making the variance become smaller and the larger effect size would have a smaller samples size resulting in a larger variance, meaning $cV_{small}=V_{big}$. Since both test statistics are similar then their p-values will be similar resulting in the paired t-test determining that p-values from original to replicate are not significantly different from one another. The power of this test goes to the $\alpha$ level of the test, normally 0.05.
+ 
+ The second type of error that can occur from using p-values, call is Case 2, is from the same effect sizes with different power. In a simple though experiment if we compared one studies original and replicate using the t-test of p-values the the test statistic would look like $\frac{{p_1-p_2}}{\sqrt{V_{p_1-p_2}}}$. Letting the original study be fixed, then the sample size of the replicate study is let to go off to $\infty$ then the variance of the replicate is 0 making the p-value, $p_2$ go to 0. This leaves the test statistic only having the p-value from the original study resulting $\frac{p_1}{V_{p_1}}$, this makes the power of the test go to 1. The test will rarely say that the two p-values are significantly similar to one another. Another way to examine it is look at is similar to the two test statistics from the two works as  $\frac{T_1}{\sqrt{V_1}} \neq \frac{T_2}{\sqrt{V_2}}$ since the numerator is the same but the denominator is different since each sample has different power meaning different samples sizes and thus different variances. This makes the p-values different from one another so the test will highly reject that they are the same, resulting in the power of the test going to 0.80.
+ 
+ 
+### Results
+ Using simulations to demonstrate Case 1 and Case 2 are presented in Table 1 and Table 2 below. 
+```{r tab, echo=FALSE}
+
+source("./bootsims.R")
+kable(case1means)
+
+ 
+```
+ 
  
