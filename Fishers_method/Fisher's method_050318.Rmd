@@ -1,7 +1,7 @@
 ---
 title: "Fisher’s Method"
 author: "Katie Fitzgerald"
-date: "05/03/2018"
+date: "06/06/2018"
 output:
   pdf_document: default
   html_document:
