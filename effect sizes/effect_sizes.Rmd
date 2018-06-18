@@ -37,3 +37,4 @@ If study 2 is twice the size of study 1, so that $v_1 = v_2/2$, then the error r
 If, however, $\theta_1 \neq \theta_2$ we would want the test to determine that the studies do not replicate, so that $S$ is at least as large as 1.96 in magnitude.
 
 
+# Weighted Average
