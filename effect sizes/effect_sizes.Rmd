@@ -7,14 +7,14 @@ output: pdf_document
 
 Another approach used by the OSC and others to determine if a replication was successful involves confidence intervals. 
 They determined that studies replicated if the estimate from the initial experiment $T_1$ is contained in a 95\% confidence interval for the replication effect parameter $\theta_2$. 
-The logic behind this can be seen in two different ways. 
+The logic behind this can be seen in at least two different ways. 
 On the one hand, it can be conceived of as determining if the effect parameter in the replicate $\theta_2$ is different from the estimate of the initial study $T_1$. 
 Note that they will be equal with probability zero under the model.
 
 Another way to think about this analysis is that it tests whether the underlying effect parameters are the same.
 To see this, note that $T_1$ being contained in the 95\% confidence interval for $\theta_2$ is equivalent to 
 \[
-S = |T_1 - T_2|/\sqrt{v_2} \leq 1.96
+|S| = |T_1 - T_2|/\sqrt{v_2} \leq 1.96
 \]
 This is conceptually identical to testing a null hypothesis of $H_0: \theta_1 = \theta_2$ with test statistic $S$ being compared to a standard normal distribution.
 However, under $H_0$, $S$ does not follow a standard normal distribution.
@@ -31,10 +31,32 @@ If study 1 is much larger than study 2, so that $v_1/v_2$ is close to zero, than
 However, the error rate will be increasing as $v_1/v_2$ gets larger. 
 If both studies are the same size so that $v_1 = v_2$, then the error rate is 32.7\%. 
 If study 2 is twice the size of study 1, so that $v_1 = v_2/2$, then the error rate is 51.4\%. 
-
-[INSERT FIGURE? error rate vs. v1/v2]
-
-If, however, $\theta_1 \neq \theta_2$ we would want the test to determine that the studies do not replicate, so that $S$ is at least as large as 1.96 in magnitude.
+In other words, even if studies replicate exactly, this test may be very likely to determine that they do not.
 
 
 # Weighted Average
+
+Another consideration of the OSF analyses was not whether study results were the same, but rather if taken in concert they provided convincing evidence of a nonzero effect. 
+The authors determined that an effect was nonzero if the precision weighted average---a fixed effects meta-analysis---of the two estimates was statistically significant.
+That is, they computed 
+\[
+\bar{T}_{\cdot} = \frac{T_1/v_1 + T_2/v_2}{1/v_1 + 1/v_2}
+\]
+Under the model, $\bar{T}_{\cdot}$ is normally distributed with mean 
+\[
+\bar{\theta}_{\cdot} = \frac{\theta_1/v_1 + \theta_2/v_2}{1/v_1 + 1/v_2}
+\]
+and variance 
+\[
+\frac{1}{1/v_1 + 1/v_2}
+\]
+
+When the effect parameters are approximately the same, so that $\theta_1 \approx \theta_2$, then this is a sensible approach, and it provides a valid test of wehther the effect is nonzero.
+However, if $\theta_1 \neq \theta_2$, then inferences will pertain to their average, $\bar{\theta}_{\cdot}$.
+It can be unclear what this average means scientifically in the context of only two studies, which is part of the reason why in the meta-analysis literature, it is recommended to present study results individually instead of an average.
+
+It is worth noting that this approach will tend to align with some of the determinations made about whether a finding was replicated.
+If the studies correspond in sign and statistical significance, then their meta-analytic average will necessarily be significant.
+However, it is possible for both estimates to be nonsignificant but still obtain a statistically significant average.
+
+
