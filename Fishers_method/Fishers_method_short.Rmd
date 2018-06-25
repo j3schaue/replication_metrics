@@ -7,7 +7,6 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#setwd("~/Desktop/NU/Replication/replication_metrics")
 ```
 
 ## Fisher's test
@@ -19,15 +18,19 @@ $H_0$: $\theta_1=\theta_2=...=\theta_{64}=0$
 $H_a$: at least one $\theta_i\neq 0,\quad i=1,...,64$
 \end{center}
 
-Because the OSC conducted Fisher's test only among the 64 replication studies that did not have significant results and thus $p_i \geq 0.05$ for all $i$, they used the following transformation of Fisher's test statistic  $$X^2=-2\sum_{i=1}^{k} ln(p_i^*)=-2\sum_{i=1}^{k} ln(\frac{p_i-0.05}{0.95}),$$ where under $H_0$, the $p_i^*$'s follow a uniform distribution on [0,1] and thus $X^2 \sim \chi^2_{2k}$, where $k$ is the number of studies, in this case 64. Low p-values give a larger test statistic, leading to a rejection of $H_0$.
+Because the OSC conducted Fisher's test only among the 64 replication studies that did not have significant results, and thus $p_i \geq 0.05$ for all $i$, they used the following transformation of Fisher's test statistic  $$X^2=-2\sum_{i=1}^{k} ln(p_i^*)=-2\sum_{i=1}^{k} ln(\frac{p_i-0.05}{0.95}),$$ where under $H_0$, the $p_i^*$'s follow a uniform distribution on [0,1] and thus $X^2 \sim \chi^2_{2k}$, where $k$ is the number of studies (in this case $k=64$). Low p-values give a larger test statistic, leading to a rejection of $H_0$.
 
-We believe that Fisher's test is not well suited to assess replication. In the event that you do reject $H_0$, this result only tells you that at least one study was a false negative, but it does not till you *which* study did in fact have a true effect. Even still, it provides no information about the size or direction of that true effect and whether or not it replicates the original finding. Presumably, a finding of "no false negatives" would be most informative in assessing replication in this scenario, but this can never be validly concluded from Fisher's method since that would require concluding the null hypothesis. While it is never advised to conduct a test in order to conclude the null hypothesis, this switched framework is especially problematic when the test is underpowered to reject $H_0$ because the Type II error rate will be large. 
+We believe that Fisher's test is not well suited to assess replication. In the event that you do reject $H_0$, this result only tells you that at least one study was a false negative, but it does not till you *which* study did in fact have a true effect. Even still, it provides no information about the size or direction of that true non-zero effect and whether or not it replicates the original finding. Presumably, a finding of "no false negatives" would be most informative in assessing replication in this scenario, but this can never be validly concluded from Fisher's method since that would require concluding the null hypothesis. While it is never advised to conduct a test in order to conclude the null hypothesis, this switched framework is especially problematic when the test is underpowered to reject $H_0$ because the Type II error rate will be large. 
 
-Even though the OSC was able to reject their null hypothesis ($X^2=155.83, p=0.048$), we think that in general Fisher's method is underpowered to answer the question at hand. We hypothesize that it requires many and possibly large non-null effects in order to skew the distribution of p-values enough to reject Fisher's null hypothesis. In the scenario where a researcher is combining the results of $k$ studies of the same treatment to test if an overall treatment effect $\Theta=0$, this type of conservative test may be appropriate. In the OSC scenario, however, since the 64 studies are not testing the same treatment effect, and one $\theta_i$ has no bearing on the 63 other $\theta_i's$, the presumed goal would be to detect if there are *any* false negatives among the replicate studies.  We turn to simulations to investigate the power of Fisher's method in the OSC scenario. 
+Even though the OSC was able to reject their null hypothesis ($X^2=155.83, p=0.048$), we think that in general Fisher's method is underpowered to answer the question at hand. We hypothesize that it requires many and possibly large non-null effects in order to skew the distribution of p-values enough to reject Fisher's null hypothesis. In the scenario where a researcher is combining the results of $k$ studies of the same treatment to test if an overall treatment effect $\Theta=0$, this type of conservative test may be appropriate. In the OSC scenario, however, since the 64 studies are not testing the same treatment effect, and one $\theta_i$ has no bearing on the 63 other $\theta_i's$, the presumed goal would be to detect if there are *any* false negatives among the replicate studies.  
 
-For simplicity of interpretation but without loss of generality, we will work with the standardized scale of Cohen's d, defined as $\delta_i=\frac{\theta_i}{\sigma_i}$, where $\theta_i$ is the mean difference between the treatment and control groups in study $i$ and $\sigma_i$ is the known and equal variance among the treatment and control populations. Assuming equal sample sizes in the treatment and control groups within study $i$ (that is, let $n_i^t=n_i^c=n_i$), $\delta_i$ is estimated by $d_i\sim N(\delta_i,\frac{2}{n_i})$.[^1] Under this framework, Fisher's method can be represented in Cohen's d as testing the hypotheses  
+The true distribution of Fisher's test statistic under the alternative hypothesis is unknown, and therefore the power cannot be calculated exactly. The asymptotic distribution of $X^2$ can be shown to be approximately normal, but this approximation is not valid for the sample sizes in the OSC data.[^1] We therefore turn to simulations to investigate the power of Fisher's method in the OSC scenario. 
 
-[^1]:See Appendix A.1 for proof and discussion of simplifying assumptions. 
+[^1]: See Appendix B
+
+For simplicity of interpretation but without loss of generality, we will work with the standardized scale of Cohen's d, defined as $\delta_i=\frac{\theta_i}{\sigma_i}$, where $\theta_i$ is the mean difference between the treatment and control groups in study $i$, and $\sigma_i$ is the known and equal variance among the treatment and control populations. Assuming equal sample sizes in the treatment and control groups within study $i$ (that is, let $n_i^t=n_i^c=n_i$), $\delta_i$ is estimated by $d_i\sim N(\delta_i,\frac{2}{n_i})$.[^2] Under this framework, Fisher's method can be represented in Cohen's d as testing the hypotheses  
+
+[^2]:See Appendix A.1 for proof and discussion of simplifying assumptions. 
 
 \begin{center}
 $H_0$: $\delta_1=\delta_2=...=\delta_{64}=0$
@@ -36,30 +39,28 @@ $H_a$: at least one $\delta_i\neq 0,\quad i=1,...,64,$
 \end{center} 
 and the 64 p-values to be summed in Fisher's test statistic can be calculated as $p_i=2(1-\Phi(\frac{|d_i|}{\sqrt{2/n_i}})).$ 
 
-We first consider the power of Fisher's method when $n_i=76/2=38$ for all $i$, because 76 is the median sample size in the OSC dataset, and we are assuming equal sample sizes in the treatment and control groups. The results of the power simulations for median sample size are given in Table 1.[^2] Note that 0.2, 0.5, and 0.8 correspond to small, medium, and large effects sizes on the scale of Cohen's d. As shown in the last column of Table 1, we find that there needs to be 10 large effects in order to achieve close to the standard 80% power (power=0.7743). If there is only one large effect, Fisher's test only has approximately 8% power to reject. Even when all 64 studies have small effects, Fisher's method only has 70% power to reject. 
+We first consider the power of Fisher's method when $n_i=76/2=38$ for all $i$, because 76 is the median sample size in the OSC dataset, and we are assuming equal sample sizes in the treatment and control groups. The results of the power simulations for median sample size are given in Table 1.[^3] Note that 0.2, 0.5, and 0.8 correspond to small, medium, and large effects sizes on the scale of Cohen's d. As shown in the last column of Table 1, we find that there needs to be 10 large effects in order to achieve close to the standard 80% power (power=0.7743). If there is only one large effect, Fisher's test only has approximately 8% power to reject. Even when all 64 studies have small effects, Fisher's method only has 70% power to reject. 
 
-[^2]: See Appendix A.2 for code and details on how the power simulations were conducted. 
+[^3]: See Appendix A.2 for code and details on how the power simulations were conducted. 
 
 Table: Power of Fisher's method given median sample size $(n_i=38)$ for varying $\delta$ and true # of non-null effects
 ```{r,echo=FALSE}
 library(knitr)
-table <- readRDS("~/Desktop/NU/Replication/replication_metrics/Fishers_method/power sims table with changing n.RDS")
+table <- readRDS("./power sims table with changing n.RDS")
 table_median<-table[,1:4]
 #colnames(table_median)[2]<
 kable(table_median,format="markdown",digits=4,align=c('l','r','r','r'),col.names=c("# of non-null effects","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"), caption="Power to reject H0 with median sample size (n=38)")
 
 ```
 
-In order to consider the power of Fisher's test under a "best-case scenario" in this dataset, we sort the 64 sample sizes and let the non-null effects be from the studies with the largest sample sizes first. That is, if there is just one non-null effect we let it be from the largest study; if there are two non-null effects we let them be from the two largest studies, etc.[^3] As shown in the first row of Table 2, even when a study with a very large sample size has a large effect, Fisher's method has less than 10% power to detect it. When the non-null effects come from the studies with the largest sample sizes, about half of the studies need to have $\delta=0.2$ in order to achieve approximately 80% power (power=0.8340).
+In order to consider the power of Fisher's test under a "best-case scenario" in this dataset, we sort the 64 sample sizes and let the non-null effects be from the studies with the largest sample sizes first. That is, if there is just one non-null effect we let it be from the largest study; if there are two non-null effects we let them be from the two largest studies, etc.[^4] As shown in the first row of Table 2, even when a study with a very large sample size has a large effect, Fisher's method has less than 10% power to detect it. When the non-null effects come from the studies with the largest sample sizes, about half of the studies need to have $\delta=0.2$ in order to achieve approximately 80% power (power=0.8340). 
 
 Table: Power of Fisher's method given large sample sizes for varying $\delta$ and true # of non-null effects (i.e. "Best-case scenario")
 ```{r, echo=FALSE}
-table <- readRDS("~/Desktop/NU/Replication/replication_metrics/Fishers_method/power_large_n.RDS")
+table <- readRDS("./power_large_n.RDS")
 kable(table,format="markdown",digits=4,align=c('l','r','r','r'),col.names=c("# of non-null effects","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"),caption="Power to reject H0 with large n")
 ```
-[^3]:Note that because we are working with a set of replicate studies which found a p-value greater than 0.05, pairing large effects with very large sample sizes is not realistic, and therefore we begin the simulations with the largest $n_i$ among the studies for which the power is at most 99.99% to detect the given $\delta_i$. The largest sample sizes used for $\delta_i=0.2; 0.5$; and $0.8$ were $n_i=745; 159;$ and $100$ respectively. See Table 4 in Appendix A.2 for the full sample size vectors that were used to conduct these "best-case scenario" power simulations.
-
-##Asymptotic power
+[^4]:Note that because we are working with a set of replicate studies which found a p-value greater than 0.05, pairing large effects with very large sample sizes is not realistic, and therefore we begin the simulations with the largest $n_i$ among the studies for which the power is at most 99.99% to detect the given $\delta_i$. The largest sample sizes used for $\delta_i=0.2; 0.5$; and $0.8$ were $n_i=745; 159;$ and $100$ respectively. See Appendix A.3 for further discussion.
 
 #Appendices
 
@@ -67,52 +68,23 @@ kable(table,format="markdown",digits=4,align=c('l','r','r','r'),col.names=c("# o
 
 ###A.1 Framework and assumptions
 
-Assume each study $i$ is testing the presence of some treatment effect $\theta_i$, where $i=1,...,k$ and $k$ is the number of studies. Assume equal sample sizes for the treatment and control groups ($n_{ti}=n_{ci}=n_i$). Let $Y_{ij}^t$ and $Y_{ij}^c$ be the observations from the treatment and control groups respectively ($i=1,...,k$, and $j=1,...n_i$), and assume $Y_{ij}^t\sim N(\mu_i +\theta_i, \sigma_i^2)$ and $Y_{ij}^c\sim N(\mu_i, \sigma_i^2)$, where the $\sigma_i^2$'s are known. Note this is not an unreasonbale assumption since this framework is required for both the t-test and the ANOVA test, and the majority of the tests in the OSC subset of 64 replicate studies are of these two types (89%). 
+Assume each study $i$ is testing the presence of some treatment effect $\theta_i$, where $i=1,...,k$, and $k$ is the number of studies. Assume equal sample sizes for the treatment and control groups ($n_{ti}=n_{ci}=n_i$). Let $Y_{ij}^t$ and $Y_{ij}^c$ be the observations from the treatment and control groups respectively ($i=1,...,k$, and $j=1,...n_i$), and assume $Y_{ij}^t\sim N(\mu_i +\theta_i, \sigma_i^2)$ and $Y_{ij}^c\sim N(\mu_i, \sigma_i^2)$, where the $\sigma_i^2$'s are known. Note this is not an unreasonbale assumption since this framework is required for both the t-test and the ANOVA test, and the majority of the tests in the OSC subset of 64 replicate studies are of these two types (89%). 
 
 Note then, $\theta_i$ is the difference in means between the treatment and control groups, and its estimate $T_i=\overline{Y_{i.}^t}-\overline{Y_{i.}^c}$ has variance $v_i=\frac{\sigma^2}{n_{ci}} +\frac{\sigma^2}{n_{ti}}=\frac{2\sigma^2}{n_i}.$ For simplicity of interpretation but without loss of generality, we work with the standardized scale of Cohen's d, defined as $\delta_i=\frac{\theta_i}{\sigma}$. Note then that $\delta_i$ is estimated by $d_i=\frac{T_i}{\sigma}=\frac{T_i}{\sqrt{\frac{v_i}{2/n_i}}}=\frac{T_i}{\sqrt{v_i}}\sqrt{{\frac{2}{n_i}}}.$ Since under $H_0$, $T_i\sim N(\theta_i,v_i) \Rightarrow \frac{T_i}{\sqrt{v_i}} \sim N(\frac{\theta_i}{\sqrt{v_i}},1)$ and $\sqrt{\frac{2}{n_i}}$ is a constant, then we have  $Var(d_i)=Var(\frac{T_i}{\sqrt{v_i}}\sqrt{{\frac{2}{n_i}}})=\frac{2}{n_i}$. Therefore, $d_i\sim N(\delta_i,\frac{2}{n_i})$.
 
 ###A.2 Power simulation logic and code
-Let there be $m$ false negatives among the 64 studies, $m=1,...,64$, that is $m$ true non-null effects. Therefore we must draw $m$ p-values from a distribution consistent with the alternative hypothesis. That is, we draw a random variable $d_i$ from a $N(\delta_i,\frac{2}{n_i})$ distribution, where $\delta_i\neq0$ and compute its p-value. We continue drawing $d_i's$ until we obtain $m$ p-values greater than 0.05 (due to the OSC restriction of only considering replicate studies with non-significant results). We will draw the remaining $64-m$ p-values from a U[0.05,1] distribution and then calculate Fisher's test statistic $X^2=-2\sum_{i=0}^{k} ln(\frac{p_i-0.05}{0.95})$. We run this procedure N times and calculate the simulated power of Fisher's method under these conditions to be $\sum_{l=0}^{N}I_{\{X^2_l>155.4047\}}/N,$ where $I$ is the indicator function and $\chi^2_{128}=155.4047$ is the critical value for Fisher's test with $k=64$ studies. We let N=100,000.
-
-Table: Power of OSC replicate studies to detect $\delta$ given $n$
-```{r,echo=FALSE,warning=FALSE,message=FALSE}
-#test upper bounds of power (by largest sample size study having false negatives)
-
-#read in OSC data
-rpp_data<-read.csv("~/Desktop/NU/Replication/replication_metrics/data/rpp_data.csv")
-
-#subset only the 64 studies used in Fisher's method and extract sample sizes
-data_forFisher<- rpp_data[ !is.na(rpp_data$T_pval_USE..R.) & (rpp_data$T_pval_USE..R.>0.05)  , ]
-n<-sort(data_forFisher$N..R.,decreasing=TRUE)/2
-
-#calculate power for OSC replicate studies to detect effects of 0.2, 0.5, and 0.8 given their exact sample size
-source("~/Desktop/NU/Replication/replication_metrics/src/metrics_funs.R")
-replicate_power<-round(data.frame(n,power_delta_0.2=power_fun(0.2,2/n),power_delta_0.5=power_fun(0.5,2/n),power_delta_0.8=power_fun(0.8,2/n)),4)
-
-#shorten # of rows to display in table
-replicate_power<-rbind(replicate_power[1:12,],c("...","...","...","..."))
-library(knitr)
-kable(replicate_power,format="markdown",digits=4,align=c('r','r','r','r'),col.names=c("n","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"),caption="Power of OSC replicate studies to detect $\\delta$ given $\n$")
-```
-Table: Sample size vectors used in "best case scenario" power simulations for given $\delta$'s
-```{r, echo=FALSE,warning=FALSE,message=FALSE}
-large_n_used<-readRDS("~/Desktop/NU/Replication/replication_metrics/Fishers_method/large_n_used.RDS")
-large_n_table<-rbind(large_n_used[1:13,],c("...","...","..."),large_n_used[64,])
-rownames(large_n_table)[14]<-c("...")
-kable(large_n_table,format="markdown",digits=1,col.names=c("$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"))
-
-```
+Let there be $m$ false negatives (i.e. $m$ true non-zero effects) among the 64 studies, $m=1,...,64$. Therefore we must draw $m$ p-values from a distribution consistent with the alternative hypothesis. That is, we draw a random variable $d_i$ from a $N(\delta_i,\frac{2}{n_i})$ distribution, where $\delta_i\neq0$ and compute its p-value. We continue drawing $d_i's$ until we obtain $m$ p-values greater than 0.05 (due to the OSC restriction of only considering replicate studies with non-significant results). We will draw the remaining $64-m$ p-values from a U[0.05,1] distribution and then calculate Fisher's test statistic $X^2=-2\sum_{i=0}^{k} ln(\frac{p_i-0.05}{0.95})$. We run this procedure N times and calculate the simulated power of Fisher's method under these conditions to be $\sum_{l=0}^{N}I_{\{X^2_l>155.4047\}}/N,$ where $I$ is the indicator function and $\chi^2_{128}=155.4047$ is the critical value for Fisher's test with $k=64$ studies. We let N=100,000. The code is given below.
 
 ```{r power_sims}
 power_sims<-function(N,M,delta,n){
-  #########################################################################################
+  ########################################################################################
   # TAKES: N; number of simulations 
-  #        M; vector of number of non-null effects
+  #        M; vector of number of non-null effects (e.g. M=c(1, 2, 3, 4, 5, 32, 64))
   #        delta; effect size under alternative hypothesis, on scale of cohen's d
   #        n; vector of treatment/control sample size across studies (total sample size/2)
   # RETURNS: power of Fisher's test to reject
   # Assumes 2-sided p-values, throws away p-values<=0.05 to match OSC methods
-  #########################################################################################
+  ########################################################################################
   
   T<-c() #empty list to store Fisher's test statistic 
   Power<-matrix() #empty matrix to store results
@@ -150,3 +122,38 @@ power_sims<-function(N,M,delta,n){
     return(Power)
 }
 ```
+
+##A.3 "Best-case scenario"" power simulations
+
+As noted in footnote 4 of the text, the largest sample sizes were dropped out of necessity in the "best-case scenario" power simulations presented in Table 2. For example, the largest study had $n_i=384351.5$, which is powered at 100% to detect even a small $\delta=0.2$. Therefore, it would have been impossible for this study to result in a p-value greater than 0.05 if there was a true non-null effect. Table 3 presents the power of the OSC replicate studies to detect a given $\delta$ using the true sample sizes for the 64 studies. For each $\delta$, we began the power simulations with the largest $n$ for which the power was at most 0.9999. The largest sample sizes used for $\delta_i=0.2; 0.5$; and $0.8$ therefore were $n_i=745; 159;$ and $100$ respectively. Table 4 presents the sample size vectors used for the "best-case scenario" power simulations.
+
+Table: Power of OSC replicate studies to detect $\delta$ given $n$
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+#test upper bounds of power (by largest sample size study having false negatives)
+
+#read in OSC data
+rpp_data<-read.csv("../data/rpp_data.csv")
+
+#subset only the 64 studies used in Fisher's method and extract sample sizes
+data_forFisher<- rpp_data[ !is.na(rpp_data$T_pval_USE..R.) & (rpp_data$T_pval_USE..R.>0.05)  , ]
+n<-sort(data_forFisher$N..R.,decreasing=TRUE)/2
+
+#calculate power for OSC replicate studies to detect effects of 0.2, 0.5, and 0.8 given their exact sample size
+source("../src/metrics_funs.R")
+replicate_power<-round(data.frame(n,power_delta_0.2=power_fun(0.2,2/n),power_delta_0.5=power_fun(0.5,2/n),power_delta_0.8=power_fun(0.8,2/n)),4)
+
+#shorten # of rows to display in table
+replicate_power<-rbind(replicate_power[1:12,],c("...","...","...","..."))
+library(knitr)
+kable(replicate_power,format="markdown",digits=4,align=c('r','r','r','r'),col.names=c("n","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"),caption="Power of OSC replicate studies to detect $\\delta$ given $\n$")
+```
+Table: Sample size vectors used in "best case scenario" power simulations for given $\delta$'s
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
+large_n_used<-readRDS("./large_n_used.RDS")
+large_n_table<-rbind(large_n_used[1:13,],c("...","...","..."),large_n_used[64,])
+rownames(large_n_table)[14]<-c("...")
+kable(large_n_table,format="markdown",digits=1,col.names=c("$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"))
+
+```
+
+##Appendix B: Fisher's method asymptotic results
