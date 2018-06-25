@@ -79,8 +79,9 @@ mc_case <- function(N, theta1, theta2, n1, n2, k){
 # will rarely reject (~7%) the null hypothesis in favor of the alternative despite the difference in
 # true effect size.
 
-# All studies have 80% power. Original studies have a true effect of 0.2 and replication studies
-# have a true effect of 0.8.
+
+# All studies have 80% power. Original studiesand replication studies differ in the size of 
+# their true effects.
 
 sl80 <- replicate(100,mc_case(1000, 0.2, 0.8, 392.4541, 24.52838, 100))
 sm80 <- replicate(100,mc_case(1000, 0.2, 0.5, 392.4541, 62.79265, 100))
@@ -90,8 +91,8 @@ mean(sl80); sd(sl80)
 mean(sm80); sd(sm80)
 mean(ml80); sd(ml80)
 
-# All studies have 60% power. Original studies have a true effect of 0.5 and replication studies 
-# have true effect of 0.8.
+# All studies have 60% power. Original studies and replication studies differ in the size of 
+# their true effects. 
 
 sl60 <- replicate(100, mc_case(1000, 0.2, 0.8, 244.9453, 15.309079, 100))
 sm60 <- replicate(100, mc_case(1000, 0.2, 0.5, 244.9453, 39.19124, 100))
@@ -101,8 +102,8 @@ mean(sl60); sd(sl60)
 mean(sm60); sd(sm60)
 mean(ml60); sd(ml60)
 
-# All studies have 40% power. Original studies have a true effect of 0.2 and replication studies
-# have a true effect of 0.8.
+# All studies have 40% power. Original studies and replication studies differ in the size of 
+# their true effects.
 
 sl40 <- replicate(100, mc_case(1000, 0.2, 0.8, 145.6332, 9.102075, 100))
 sm40 <- replicate(100, mc_case(1000, 0.2, 0.5, 145.6332, 23.30131, 100))
