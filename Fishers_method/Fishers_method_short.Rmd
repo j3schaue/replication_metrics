@@ -157,3 +157,55 @@ kable(large_n_table,format="markdown",digits=1,col.names=c("$\\delta=0.2$","$\\d
 ```
 
 ##Appendix B: Fisher's method asymptotic results
+
+Under the Neyman and Pearson hypothesis testing framework, the significance level follows a uniform distribution on $\lbrack0,1\rbrack$ when the null hypothesis holds, however, the exact distribution under the alternative hypothesis is unknown. As a consequence of this, we rely on long known results from asymptotic theory. Lambert and Hall have shown that, given the test statistic is asymptotically normal, the one sided P-value follows a lognormal distribution with mean $-nc(\theta)$ and variance $n\tau^2(\theta)$ (1982). The parameter $c(\theta)$ is defined as half the Bahadur slope, given by $-\frac{1}{n}lim_{n\to\infty}logP_n=c(\theta)$, and is the exponential rate at which the significance level converges to zero under the alternative hypothesis. In addition, observe that the variance of the standardized P-value is $\frac {\tau^2(\theta)}{n}$. We can approximate the two sided P-value by doubling the one sided one, which implies that $P_n\sim AlogN\lbrack-\frac{1}{2}nc(\theta), \frac {1}{4}n\tau^2(\theta)\rbrack$, and thus $logP_n\sim AN\lbrack-\frac{1}{2} nc(\theta), \frac{1}{4}n\tau^2(\theta)\rbrack$. Multiplying $logP_n$ by $-2$, we obtain $-2logP_n\sim AN\lbrack nc(\theta), n\tau^2(\theta)\rbrack$. Note that $-2logP_{n_j}$, $j=1,...,k$, are asymptotically independent random variables following identical distributions, therefore under $H_a$ $$X^2_n=-2\sum_{j=1}^{k} logP_{n_j} \sim AN(\sum_{j=1}^{k}n_j c_j(\theta), \sum_{j=1}^{k}n_j \tau^2_j(\theta))$$. 
+
+Examining the behavior of $X^2_n$ using simulated data, we find that the normal approximation is valid if the within study sample size $n_j$ is at least 1500, 250, and 100 for $\theta$ equal to 0.2, 0.5, and 0.8, respectively. Note that $\theta$ in this case can be interpreted as Cohen's d because $\sigma$ is assumed to be 1. When the within study sample sizes are smaller than indicated previously, the distribution of the test statistic is skewed to the right, and therefore the normal approximation is not valid.
+
+```{r,echo=FALSE, message=FALSE, fig.show='hold', fig.align='center'}
+
+p1<-c()
+dist_of_X2<-function(delta,n){
+  for (j in 1:100000){ 
+    p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n)))/sqrt(2/n)))
+  }
+  X2<--2*log(p1)
+}
+
+library(latex2exp)
+par(mfrow=c(3,2))
+
+hist(dist_of_X2(0.2,700), main=TeX('n=700, $\\theta$=0.2'), xlab=expression('X'^2))
+hist(dist_of_X2(0.2,1500), main=TeX('n=1500, $\\theta$=0.2'), xlab=expression('X'^2))
+
+hist(dist_of_X2(0.5,100), main=TeX('n=100, $\\theta$=0.5'),  xlab=expression('X'^2))
+hist(dist_of_X2(0.5,250), main=TeX('n=250, $\\theta$=0.5'),  xlab=expression('X'^2))
+
+hist(dist_of_X2(0.8,50), main=TeX('n=50, $\\theta$=0.8'),  xlab=expression('X'^2))
+hist(dist_of_X2(0.8,100), main=TeX('n=100, $\\theta$=0.8'),  xlab=expression('X'^2))
+```
+
+
+Now consider the two sample shift problem as an example. Let $Y_{11},Y_{21},...,Y_{n1}$ denote a sample of i.i.d. observations from a normal distribution with mean $\mu$ and standard deviation 1. Let $Y_{12},Y_{22},...,Y_{n2}$ denote a second sample, independent of the first, with i.i.d. observations from a normal $(\mu+\theta, 1)$. For simplicity, suppose that $n_1$ and $n_2$ are equal. We test $H_0:\theta=0$ versus $H_a:\theta\neq0$ by using $\frac{\sqrt{n}(\overline{Y_2}-\overline{Y_1})}{\sqrt{2}}$. According to Lambert and Hall, $c(\theta)=\frac{1}{2}\lambda\overline{\lambda}\theta^2$ and $\tau^2(\theta)=\lambda\overline{\lambda}\theta^2$, where $\lambda$ denotes the fractional sample size, and $\overline{\lambda}=1-\lambda$. Since we are assuming $n_1$ is equal to $n_2$, both $\lambda$ and $\overline{\lambda}$ are $\frac{1}{2}$. Then, if all k studies are testing the same hypothesis, it follows that $X^2_n$ is asymptotically normal with grand mean $\sum_{j=1}^{k}\frac{1}{2}n_j \lambda_j \overline{\lambda_j}\theta_j^2$ and grand variance $\sum_{j=1}^{k}n_j \lambda_j \overline{\lambda_j}\theta_j^2$. Consequently, the asymptotic power is:
+
+$$\begin{aligned}
+Power&=Pr(reject \ H_0 \ | \ H_a \ is \ true)\\
+&=1-Pr(fail \ to \ reject \ H_0 \ | \ H_a \ is \ true)\\
+&=1-Pr(|X^2_n| \ < \ \chi^2_{2k} \ | \ H_a \ is \ true)\\
+&=1-\Phi\Big(\frac{\chi^2_{2k}-\sum_{j=1}^{k} \frac{1}{2} n_j\lambda_j \overline{\lambda}_j\theta^2_j}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}\Big)+\Phi\Big(\frac{-\chi^2_{2k}-\sum_{j=1}^{k} \frac{1}{2} n_j\lambda_j \overline{\lambda}_j\theta^2_j}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}\Big)\\
+&=1-\Phi\Big(\frac{\chi^2_{2k}}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}-\frac{1}{2}\Big)+\Phi\Big(\frac{-\chi^2_{2k}}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}-\frac{1}{2}\Big)\\
+&=1
+\end{aligned}.$$
+
+The following plots of the power function reveal that asymptotic power approaches 1 when the total within study sample size is greater than 600, 100, and 50 for a fixed $\theta$ of 0.2, 0.5, and 0.8, respectively. 
+
+```{r prt 1, echo=FALSE, message=FALSE, fig.width=3, fig.height=5,fig.show='hold',fig.align='center'}
+power<-function(n,delta){
+  1-pnorm(155.4047, mean=64*(1/2)*n*(1/4)*(delta^2), sqrt(64*n*(1/4)*(delta^2)))+pnorm(-155.4047, mean=64*(1/2)*n*(1/4)*(delta^2), sqrt(64*n*(1/4)*(delta^2)))
+}
+require(latex2exp)
+par(mfrow=c(3,1))
+plot(power(1:700,0.2), type='l', xlab='n', ylab='Power', main=TeX('$\\theta$=0.2'))
+plot(power(1:700,0.5), type='l', xlab='n', ylab='Power', main=TeX('$\\theta$=0.5'))
+plot(power(1:700,0.8), type='l', xlab='n', ylab='Power', main=TeX('$\\theta$=0.8'))
+```
