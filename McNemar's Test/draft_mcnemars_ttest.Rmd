@@ -62,7 +62,7 @@ $$
 In other words, under the null hypothesis, if we were to draw a study pair at random, the probability of obtaining a significant result in the original study is equal to the probability of obtaining a significant result in the replication study. Taking this observation into consideration and noting that $p_{ij} \leq 0.05 \equiv \frac{|T_{ij}|}{\sqrt{v_{ij}}} \geq 1.96$, we can reformulate the null hypothesis as follows.
 
 $$
-H_0: \sum\limits_{j=1}^k P \Big ( \frac{|T_{1j}|}{\sqrt{v_{1j}}} \geq 1.96 |i \Big) P(i) = \sum\limits_{j=1}^k P \Big ( \frac{|T_{2j}|}{\sqrt{v_{2j}}} \geq 1.96 |i \Big) P(i)
+H_0: \sum\limits_{j=1}^k P \Big ( \frac{|T_{1j}|}{\sqrt{v_{1j}}} \geq 1.96 |j \Big) P(j) = \sum\limits_{j=1}^k P \Big ( \frac{|T_{2j}|}{\sqrt{v_{2j}}} \geq 1.96 |j \Big) P(j)
 $$
 
 That is, we can think of McNemar's test as a test of difference in the average power rather than a difference in paired proportions. As such, a rejection of the null hypothesis is akin to concluding that there is a statistically significant difference between the average power of the original studies and the average power of the replication studies. However, this does not necessarily imply that the original findings were not replicated in the replication studies, if we take replication to be $\theta_{1j} = \theta_{2j}$. Similarly, a failure to reject the null hypothesis for McNemar's test does not necessarily imply that the findings did, in fact, replicate. 
@@ -76,7 +76,7 @@ $$
 $$
 n_{01} = \sum\limits_{j=1}^k \mathbf{1} \Big \lbrace \frac{|T_{1j}|}{\sqrt{v_{1j}}} < 1.96  \Big \rbrace \mathbf{1} \Big \lbrace \frac{|T_{2j}|}{\sqrt{v_{2j}}} \geq 1.96  \Big \rbrace \rightarrow \sum\limits_{j=1}^k \mathbf{1} \Big \lbrace \frac{|T_{1j}|}{\sqrt{v_{1j}}} < 1.96 \Big \rbrace
 $$
-This implies that the McNemar's test statistic $X^2$  $\rightarrow$ $\sum\limits_{j=1}^k \mathbf{1} \lbrace \frac{|T_{1j}|}{\sqrt{v_{1j}}} < 1.96 \rbrace$ as the replication sample sizes grow large. Let's assume that all $k$ original studies have 80% power to detect their true effect. Then, $X^2$ approaches $0.2k$ as the replication sample sizes increase. Recall that McNemar's test rejects if $X^2 > \chi^2_{[0.05,1]}$. In this instance, as long as $k>2$, McNemar's test will always reject despite the true effect sizes being identical for all $k$ study pairs.
+This implies that the McNemar's test statistic $X^2 = \frac{(n_{10} - n_{01})^2}{n_{10} + n_{01}}$  $\rightarrow$ $\sum\limits_{j=1}^k \mathbf{1} \lbrace \frac{|T_{1j}|}{\sqrt{v_{1j}}} < 1.96 \rbrace$ as the replication sample sizes grow large. Let's assume that all $k$ original studies have 80% power to detect their true effect. Then, $X^2$ approaches $0.2k$ as the replication sample sizes increase. Recall that McNemar's test rejects if $X^2 > \chi^2_{[0.05,1]}$. In this instance, as long as $k \geq 20$, McNemar's test will always reject despite the true effect sizes being identical for all $k$ study pairs.
 
 A false validation occurs when the original and replication studies have different true effects (i.e. $\theta_{1j} \neq \theta_{2j}$) but have the same power to detect those effects (i.e. $(1-\beta_{1j}) = (1-\beta_{2j})$). The impact of the power of the original and replication studies on this test's false validation rate is easiest understood through a consideration of the test's power function. The power function for McNemar's test is given by
 
@@ -153,7 +153,21 @@ In data simulations to test our analysis of power of the test, we fix the power 
 
 
 \newpage 
-## Appendix
+
+## Appendix A: Reframing McNemar's Null Hypothesis
+
+Recall that the null hypothesis for McNemar's test states that the marginal probabilities for each outcome are the same. That is, $H_0: p_{11} + p_{10} = p_{11} + p_{01}$ where $p_{11}$ is the proportion of $k$ study pairs in which both findings were significant, $p_{10}$ is the proportion of $k$ study pairs in which the original finding was significant and the replication finding was not, and $p_{01}$ is the proportion of $k$ study pairs in which the original finding was not sigificant and the replication finding was. Note that this is equivalent to the null hypothesis $p_{1+} = p_{+1}$ where $p_{1+}$ is the proportion of $k$ study pairs in which the original finding was significant and $p_{+1}$ is the proportion of $k$ study pairs in which the replication finding was significant. We can reformulate the null hypothesis in terms of the p-values of the original and replication studies as follows.
+
+$$
+\begin{aligned}
+H_0&:  p_{1+} = p_{+1} \\
+H_0&: \frac{1}{k}\sum\limits_{j=1}^k p_{1j} \leq 0.05 = \frac{1}{k}\sum\limits_{j=1}^k p_{2j} \leq 0.05
+
+\end{aligned}
+$$
+
+
+## Appendix B: Agreement between McNemar's test and the \textit{t} test
 
 Given that McNemar's test and the \textit{t} test have similar properties, it is worth considering the rate at which the two tests agree on conclusions about replication. To determine whether McNemar's test and the \textit{t} test always reach the same conclusions when $\theta_{1j} = \theta{2j}$, we ran 1,000 trials on the same simulated data and calculated the proportion of trials in which both tests rejected their null hypothesis. The results of these simulations are found in Table 3. Similarly, to determine whether the two tests always reach the same conclusions when $\theta_{1j} \neq \theta_{2j}$, we ran 1,000 trials on the same simulated data and calucated the porpotion of trials in which both tests failed to reject their null hypothesis. The results of these simulations are found in Table 4. 
 
