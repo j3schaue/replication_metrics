@@ -1,9 +1,10 @@
-power_sims<-function(N,M,delta,n){
+power_sims<-function(N,M,delta,n,K){
   #########################################################################################
   # TAKES: N; number of simulations 
   #        M; vector of number of non-null effects
   #        delta; effect size under alternative hypothesis, on scale of cohen's d
   #        n; vector of treatment/control sample size across studies (total sample size/2)
+  #        K; number of studies
   # RETURNS: power of Fisher's test to reject
   # Assumes 2-sided p-values, throws away p-values<=0.05 to match OSC methods
   #########################################################################################
@@ -15,9 +16,9 @@ power_sims<-function(N,M,delta,n){
     
     for (i in 1:N){
       
-      #print(i) # can uncomment to show progress for lengthy simulations
+      print(i) # can uncomment to show progress for lengthy simulations
     
-      p0<-runif(64 - M[k], 0.05, 1) #draws p-values for the true null effects
+      p0<-runif(K - M[k], 0.05, 1) #draws p-values for the true null effects
       
       p1<-c() #create list to store p-values drawn for non-null effects
       
@@ -26,10 +27,10 @@ power_sims<-function(N,M,delta,n){
         p1[j]<-0
         
         while (p1[j] <= 0.05) { #throw away p-values<=0.05
-          p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n[j])))/sqrt(2/n[j])))
+          p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n[j] + delta^2/(4*n[j]))))/sqrt(2/n[j] + delta^2/(4*n[j]))))
         }
         
-        #print(n[j]) # can uncomment to show progress for lengthy simulations 
+        print(n[j]) # can uncomment to show progress for lengthy simulations 
         }
       
       #test statistic for Fisher's method, with transformation for truncating p-values
@@ -37,7 +38,7 @@ power_sims<-function(N,M,delta,n){
     
       }
     
-    Power[k]<-sum(T>155.4047)/N
+    Power[k]<-sum(T > qchisq(0.95, 2*K) )/N
   
     }
   
@@ -73,3 +74,18 @@ power_large_n<-data.frame(M,delta_0.2_large_n,delta_0.5_large_n,delta_0.8_large_
 saveRDS(power_large_n,"power_large_n.RDS")
 saveRDS(large_n_used,"large_n_used.RDS")
 
+###NEW TABLES###
+M<-c(1,2,3,4,5,10)
+n<-rep(50,10)
+power_delta_0.2_k10 <-power_sims(100000,M,0.2,n,10)
+power_delta_0.5_k10<-power_sims(100000,M,0.5,n,10)
+power_delta_0.8_k10<-power_sims(100000,M,0.8,n,10)
+table_k10_n50<-data.frame(M,power_delta_0.2_k10,power_delta_0.5_k10,power_delta_0.8_k10)
+saveRDS(table_k10_n50,"table_k10_n50.RDS")
+
+n<-rep(100,10)
+power_d.2_k10_n100 <-power_sims(100000,M,0.2,n,10)
+power_d.5_k10_n100<-power_sims(100000,M,0.5,n,10)
+power_d.8_k10_n100<-power_sims(100000,M,0.8,n,10)
+table_k10_n100<-data.frame(M,power_d.2_k10_n100,power_d.5_k10_n100,power_d.8_k10_n100)
+saveRDS(table_k10_n100,"table_k10_n100.RDS")
