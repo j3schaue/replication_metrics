@@ -28,7 +28,7 @@ The true distribution of Fisher's test statistic under the alternative hypothesi
 
 [^1]: See Appendix B
 
-For simplicity of interpretation but without loss of generality, we will work with treatment effects on the standardized scale of Cohen's d, defined as $\delta_j=\frac{\theta_j}{\sigma_j}$, where $\theta_j$ is the mean difference between the treatment and control groups in study $j$, and $\sigma_j$ is the known and equal variance among the treatment and control populations. Assuming equal sample sizes in the treatment and control groups within study $j$ (that is, let $n_j^t=n_j^c=n_j$), $\delta_j$ is estimated by $d_j\sim N(\delta_j,\frac{2}{n_j})$.[^2] Under this framework, Fisher's method can be represented in Cohen's d as testing the hypotheses  
+For simplicity of interpretation but without loss of generality, we will work with treatment effects on the standardized scale of Cohen's d, defined as $\delta_j=\frac{\theta_j}{\sigma_j}$, where $\theta_j$ is the mean difference between the treatment and control groups in study $j$, and $\sigma_j$ is the equal variance among the treatment and control populations. Assuming equal sample sizes in the treatment and control groups within study $j$ (that is, let $n_j^t=n_j^c=n_j$), $\delta_j$ is estimated by $d_j\sim N(\delta_j,\frac{2}{n_j})$.[^2] Under this framework, Fisher's method can be represented in Cohen's d as testing the hypotheses  
 
 [^2]:See Appendix A.1 for proof and discussion of simplifying assumptions. 
 

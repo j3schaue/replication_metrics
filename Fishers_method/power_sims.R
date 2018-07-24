@@ -75,14 +75,34 @@ saveRDS(power_large_n,"power_large_n.RDS")
 saveRDS(large_n_used,"large_n_used.RDS")
 
 ###NEW TABLES###
+
+##k=10##
 M<-c(1,2,3,4,5,10)
+
+#n=25
+n<-rep(25,10)
+power_delta_0.2_k10_n25 <-power_sims(100000,M,0.2,n,10)
+power_delta_0.5_k10_n25<-power_sims(100000,M,0.5,n,10)
+power_delta_0.8_k10_n25<-power_sims(100000,M,0.8,n,10)
+table_k10_n25<-data.frame(M,power_delta_0.2_k10_n25,power_delta_0.5_k10_n25,power_delta_0.8_k10_n25)
+saveRDS(table_k10_n25,"table_k10_n25.RDS")
+#n=50
 n<-rep(50,10)
 power_delta_0.2_k10 <-power_sims(100000,M,0.2,n,10)
 power_delta_0.5_k10<-power_sims(100000,M,0.5,n,10)
 power_delta_0.8_k10<-power_sims(100000,M,0.8,n,10)
 table_k10_n50<-data.frame(M,power_delta_0.2_k10,power_delta_0.5_k10,power_delta_0.8_k10)
 saveRDS(table_k10_n50,"table_k10_n50.RDS")
-
+#n=75
+n<-rep(75,10)
+power_delta_0.2_k10_n75 <-power_sims(100000,M,0.2,n,10)
+power_delta_0.5_k10_n75<-power_sims(100000,M,0.5,n,10)
+power_delta_0.8_k10_n75<-power_sims(100000,M,0.8,n,10)
+table_k10_n75<-data.frame(M,power_delta_0.2_k10_n75,power_delta_0.5_k10_n75,power_delta_0.8_k10_n75)
+saveRDS(table_k10_n75,"table_k10_n75.RDS")
+saveRDS(power_delta_0.2_k10_n75,"power_delta_0.2_k10_n75.RDS")
+saveRDS(power_delta_0.5_k10_n75,"power_delta_0.5_k10_n75.RDS")
+#n=100
 n<-rep(100,10)
 power_d.2_k10_n100 <-power_sims(100000,M,0.2,n,10)
 power_d.5_k10_n100<-power_sims(100000,M,0.5,n,10)
