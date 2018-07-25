@@ -253,6 +253,7 @@ labels <- c('25' = "n=25", '50' = "n=50", '75' = "n=75", '100'= "n=100")
 ggplot(k10, aes(x = M, y = power, color = factor(delta))) +
   theme(panel.grid.minor = element_blank(),
         axis.ticks = element_blank(), plot.title = element_text(hjust = 0.5)) +
+  scale_color_brewer(palette="Dark2")+
   scale_x_continuous(name = "# of false negatives", limits = c(1,10), breaks = seq(1,10,1)) +
   scale_y_continuous(name = "Power", limits = c(0,1), breaks = seq(0,1,0.1))+
   geom_point(size = 3) +
