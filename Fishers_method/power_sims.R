@@ -258,7 +258,6 @@ ggplot(k10, aes(x = M, y = power, color = factor(delta))) +
   scale_y_continuous(name = "Power", limits = c(0,1), breaks = seq(0,1,0.1))+
   geom_point(size = 3) +
   facet_grid(.~n, labeller = labeller(n = labels)) +
-  guides(fill=guide_legend(title="New Legend Title"))+
   labs(title = "Power of Fisher's method for k=10 studies", color = expression(delta))+
-  geom_smooth(method = "lm", se = FALSE, size = 0.5)
+  geom_smooth(method = "loess", se = FALSE, size = 0.5)
 
