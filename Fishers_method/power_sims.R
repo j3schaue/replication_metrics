@@ -148,8 +148,26 @@ saveRDS(table_k100_n75,"table_k100_n75.RDS")
 
 #n=100
 n<-rep(100,100)
-power_delta_0.2_k100_n100 <-power_sims(100000,M,0.2,n,100)
-saveRDS(power_delta_0.2_k100_n100,"power_delta_0.2_k100_n100.RDS")
+power_delta_0.8_k100_n100_M1 <-power_sims(100000,1,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M1,"power_delta_0.8_k100_n100_M1.RDS")
+power_delta_0.8_k100_n100_M2 <-power_sims(100000,2,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M2,"power_delta_0.8_k100_n100_M2.RDS")
+power_delta_0.8_k100_n100_M3 <-power_sims(100000,3,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M3,"power_delta_0.8_k100_n100_M3.RDS")
+power_delta_0.8_k100_n100_M4 <-power_sims(100000,4,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M4,"power_delta_0.8_k100_n100_M4.RDS")
+power_delta_0.8_k100_n100_M5 <-power_sims(100000,5,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M5,"power_delta_0.8_k100_n100_M5.RDS")
+power_delta_0.8_k100_n100_M10 <-power_sims(100000,10,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M10,"power_delta_0.8_k100_n100_M10.RDS")
+power_delta_0.8_k100_n100_M50 <-power_sims(100000,50,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M50,"power_delta_0.8_k100_n100_M50.RDS")
+power_delta_0.8_k100_n100_M100 <-power_sims(1000,100,0.8,n,100)
+saveRDS(power_delta_0.8_k100_n100_M100,"power_delta_0.8_k100_n100_M100.RDS")
+
+power_delta_0.8_k100_n100 <- c(power_delta_0.8_k100_n100_M1, power_delta_0.8_k100_n100_M1, power_delta_0.8_k100_n100_M3, power_delta_0.8_k100_n100_M4, power_delta_0.8_k100_n100_M5, power_delta_0.8_k100_n100_M10, power_delta_0.8_k100_n100_M50, power_delta_0.8_k100_n100_M100)
+
+
 power_delta_0.5_k100_n100<-power_sims(100000,M,0.5,n,100)
 saveRDS(power_delta_0.5_k100_n100,"power_delta_0.5_k100_n100.RDS")
 power_delta_0.8_k100_n100<-power_sims(100000,M,0.8,n,100)
@@ -158,6 +176,11 @@ table_k100_n100<-data.frame(M,power_delta_0.2_k100_n100,power_delta_0.5_k100_n10
 saveRDS(table_k100_n100,"table_k100_n100.RDS")
 
 ##get data in correct format
+table_k10_n100 <- readRDS("~table_k10_n100.RDS")
+table_k10_n25 <- readRDS("~table_k10_n25.RDS")
+table_k10_n50 <- readRDS("~table_k10_n50.RDS")
+table_k10_n75 <- readRDS("~table_k10_n75.RDS")
+
 k10_n25_d.2 <- as.data.frame(table_k10_n25[,2])
 colnames(k10_n25_d.2)[1] <- "power"
 k10_n25_d.2$n <- rep(25,length(k10_n25_d.2))
@@ -256,7 +279,7 @@ ggplot(k10, aes(x = M, y = power, color = factor(delta))) +
   scale_color_brewer(palette="Dark2")+
   scale_x_continuous(name = "# of false negatives", limits = c(1,10), breaks = seq(1,10,1)) +
   scale_y_continuous(name = "Power", limits = c(0,1), breaks = seq(0,1,0.1))+
-  geom_point(size = 3) +
+  #geom_point(size = 3) +
   facet_grid(.~n, labeller = labeller(n = labels)) +
   labs(title = "Power of Fisher's method for k=10 studies", color = expression(delta))+
   geom_smooth(method = "loess", se = FALSE, size = 0.5)
