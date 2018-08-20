@@ -170,22 +170,29 @@ Examining the behavior of $X^2_n$ using simulated data, we find that the normal 
 p1<-c()
 dist_of_X2<-function(delta,n){
   for (j in 1:100000){ 
-    p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n)))/sqrt(2/n)))
+    p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n + delta^2 / (4*n))))/sqrt(2/n + delta^2 / (4*n))))
   }
   X2<--2*log(p1)
 }
 
+d1 <- as.data.frame(dist_of_X2(0.2,700))
+colnames(d1)[1]<-"V1"
+ggplot(d1, aes(x = V1)) +
+  geom_density()
+
 library(latex2exp)
 par(mfrow=c(3,2))
 
-hist(dist_of_X2(0.2,700), main=TeX('n=700, $\\theta$=0.2'), xlab=expression('X'^2))
-hist(dist_of_X2(0.2,1500), main=TeX('n=1500, $\\theta$=0.2'), xlab=expression('X'^2))
+hist(dist_of_X2(0.2,700), main=TeX('n=700, $\\theta$=0.2'), xlab=expression(-2*log(p_i)))
+x<-seq(0,60,0.1)
+curve(dnorm(x, mean = 0.5*700*2*1/4*0.2^2, sd = sqrt(2*700*1/4*0.2^2)), add = TRUE)
+hist(dist_of_X2(0.2,1500), main=TeX('n=1500, $\\theta$=0.2'), xlab=expression(-2*log(p_i)))
 
-hist(dist_of_X2(0.5,100), main=TeX('n=100, $\\theta$=0.5'),  xlab=expression('X'^2))
-hist(dist_of_X2(0.5,250), main=TeX('n=250, $\\theta$=0.5'),  xlab=expression('X'^2))
+hist(dist_of_X2(0.5,100), main=TeX('n=100, $\\theta$=0.5'),  xlab=expression(-2*log(p_i)))
+hist(dist_of_X2(0.5,250), main=TeX('n=250, $\\theta$=0.5'),  xlab=expression(-2*log(p_i)))
 
-hist(dist_of_X2(0.8,50), main=TeX('n=50, $\\theta$=0.8'),  xlab=expression('X'^2))
-hist(dist_of_X2(0.8,100), main=TeX('n=100, $\\theta$=0.8'),  xlab=expression('X'^2))
+hist(dist_of_X2(0.8,50), main=TeX('n=50, $\\theta$=0.8'),  xlab=expression(-2*log(p_i)))
+hist(dist_of_X2(0.8,100), main=TeX('n=100, $\\theta$=0.8'),  xlab=expression(-2*log(p_i)))
 ```
 
 
