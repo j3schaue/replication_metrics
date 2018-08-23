@@ -110,7 +110,8 @@ diane<-function(delta,n){
     #p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n + delta^2 / (4*n))))/sqrt(2/n + delta^2 / (4*n))))
     #p1[j]<-2*(1 - pnorm(abs(rnorm(1, 1/2*2*n*1/4*delta^2, sqrt(2*n*1/4*delta^2)))/sqrt(2*n*1/4*delta^2)))
     z[j] <- rnorm(1,delta, sqrt(2/n + delta^2/(4*n)))
-    p1[j] <- (1-pnorm(z[j]/sqrt(2/n + delta^2/(4*n))))
+    #p1[j] <- (1-pnorm(z[j]/sqrt(2/n + delta^2/(4*n))))
+    p1[j] <- 2*(1-pnorm(abs(z[j])/sqrt(2/n + delta^2/(4*n)))) #two-sided
   }
   D<--2*log(p1)
 }
@@ -122,8 +123,9 @@ plot <- function(delta, n){
   ggplot(d1, aes(x = V1)) +
   scale_x_continuous(name = "-2log(p_i)", limits = c(-20,80), breaks = seq(-20,100,10)) +
   geom_histogram(aes(y = ..density..)) +
-  stat_function(fun = dnorm, args = list(mean = 2*n*1/4*delta^2, sd = sqrt(2*n*delta^2))) +
-  labs(title = c(n,delta))
+  #stat_function(fun = dnorm, args = list(mean = 2*n*1/4*delta^2, sd = sqrt(2*n*delta^2))) +
+  stat_function(fun = dnorm, args = list(mean = 1/2*2*n*1/4*delta^2, sd = sqrt(2*n*1/4*delta^2))) + #two-sided
+  labs(title = n)
 }
 
 p1 <- plot(0.2,700)
