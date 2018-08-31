@@ -1,7 +1,7 @@
 ---
 title: "Fisher’s Method"
 author: "Katie Fitzgerald and Rrita Zejnullahi"
-date: "06/20/2018"
+date: "08/31/2018"
 output: pdf_document
 ---
 
@@ -11,20 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Fisher's test
 
-Among the 100 replication studies conducted by the Open Science Collaboration (OSC), 64 found null effects, defined as having a p-value greater than 0.05. Because only 3 of the original studies found null effects, when using the "sign and significance" metric to assess replication, the OSC took this to indicate that there was widespread failure in replication. One possible explanation for this "failure to replicate," however, would be that the replication studies were simply underpowered to detect the true non-zero effects that the original studies found. In general, a finding of a null effect indicates that either the true effect is in fact zero or that it is non-zero but the test was underpowered to detect it. Hoping to determine which of these two scenarios is true of their replication studies, the OSC applied Fisher's method to the set of 64 non-significant p-values to test the null hypothesis that a true zero effect held for each study and that there were no false negatives among them. Their hypothesis for Fisher's test could be formalized as follows, where $\theta_j$ is the treatment effect for study $j$:
+Among the 100 replication studies conducted by the Open Science Collaboration (OSC), 64 found null effects, defined as having a p-value greater than 0.05. Because only 3 of the original studies found null effects, when using the "sign and significance" metric to assess replication, the OSC took this to indicate that there was widespread failure in replication. In general, a finding of a null effect indicates that either the true effect is in fact zero or that it is non-zero but the test was underpowered to detect it. Hoping to determine which of these two scenarios is true of their replication studies, the OSC applied Fisher's method to the set of 64 non-significant p-values to test the null hypothesis that a true zero effect held for each study and that there were no false negatives among them. That is, they wish to rule out the possibility that being under-powered was the only reason for failure to find significant results in the replication studies. Their hypothesis for Fisher's test could be formalized as follows, where $\theta_j$ is the treatment effect for study $j$:
 \begin{center}
 $H_0$: $\theta_1=\theta_2=...=\theta_{64}=0$
 
 $H_a$: at least one $\theta_j\neq 0,\quad j=1,...,64$
 \end{center}
 
-Because the OSC conducted Fisher's test only among the 64 replication studies that did not have significant results, and thus $p_j \geq 0.05$ for all $j$, they used the following transformation of Fisher's test statistic  $$X^2=-2\sum_{j=1}^{k} ln(p_j^*)=-2\sum_{j=1}^{k} ln(\frac{p_j-0.05}{0.95}),$$ where under $H_0$, $X^2 \sim \chi^2_{2k}$, where $k$ is the number of studies (in this case $k=64$). Low p-values give a larger test statistic, leading to a rejection of $H_0$.
+Note that since $p_j \geq 0.05$ for all $j$ in this scenario, the following transformation of Fisher's test statistic was used $$X^2=-2\sum_{j=1}^{k} ln(p_j^*)=-2\sum_{j=1}^{k} ln(\frac{p_j-0.05}{0.95}),$$ where $X^2 \sim \chi^2_{2k}$ under $H_0$ and $k$ is the number of studies (in this case $k=64$). Low p-values give a larger test statistic, leading to a rejection of $H_0$.
 
-We believe that Fisher's test is not well suited to assess replication. In the event that you do reject $H_0$, this result only tells you that at least one study was a false negative, but it does not tell you *which* study did in fact have a true non-zero effect. Even still, it provides no information about the size or direction of that non-zero effect and whether or not it replicates the original finding. Presumably, a finding of "no false negatives" would be most informative in assessing replication in this scenario, but this can never be validly concluded from Fisher's method since that would require concluding the null hypothesis. While it is never advised to conduct a test in order to conclude the null hypothesis, this switched framework is especially problematic when the test is underpowered to reject $H_0$ because the Type II error rate will be large. 
+We believe that Fisher's test is not well suited to distinguish between low power and the existence of false negatives. Presumably, a finding of "no false negatives" would be most informative in assessing replication in this scenario, but this can never be validly concluded from Fisher's method since that would require concluding the null hypothesis. While it is never advised to conduct a test in order to conclude the null hypothesis, this switched framework is especially problematic when the test is underpowered to reject $H_0$ because the Type II error rate will be large. Even though the OSC was able to reject their null hypothesis ($X^2=155.83, p=0.048$), we think that in general Fisher's method is underpowered to answer the question at hand. We hypothesize that it requires many and possibly large non-null effects in order to skew the distribution of p-values enough to reject Fisher's null hypothesis.  
 
-Even though the OSC was able to reject their null hypothesis ($X^2=155.83, p=0.048$), we think that in general Fisher's method is underpowered to answer the question at hand. We hypothesize that it requires many and possibly large non-null effects in order to skew the distribution of p-values enough to reject Fisher's null hypothesis. In the scenario where a researcher is combining the results of $k$ studies of the same treatment to test if an overall treatment effect $\Theta=0$, this type of conservative test may be appropriate. In the OSC scenario, however, since the 64 studies are not testing the same treatment effect, and one $\theta_j$ has no bearing on the 63 other $\theta_j$'s, the presumed goal would be to detect if there are *any* false negatives among the replicate studies.  
-
-The true distribution of Fisher's test statistic under the alternative hypothesis is unknown, and therefore the power cannot be calculated exactly. The asymptotic distribution of $X^2$ can be shown to be approximately normal as within study sample sizes go to infinity, but this approximation is only valid for impractical sample sizes and detectable effect sizes.[^1] We therefore turn to simulations to investigate the power of Fisher's method in the OSC scenario. 
+The true distribution of Fisher's test statistic under the alternative hypothesis is unknown, and therefore the power cannot be calculated exactly. The asymptotic distribution of $X^2$ can be shown to be approximately normal as within study sample sizes go to infinity, but this approximation is only valid for impractical sample sizes and detectable effect sizes.[^1] We therefore turn to simulations to investigate the power of Fisher's method. 
 
 [^1]: See Appendix B
 
@@ -41,7 +39,7 @@ and the 64 p-values to be summed in Fisher's test statistic can be calculated as
 
 [^3]: See Appendix A.1 for code and details on how the power simulations were conducted. 
 
-In order to consider the power of Fisher's test under a "best-case scenario" in this dataset, we sort the 64 sample sizes and let the non-null effects be from the studies with the largest sample sizes first. That is, if there is just one non-null effect we let it be from the largest study; if there are two non-null effects we let them be from the two largest studies, etc.[^3] This will provide the highest possible power of Fisher's method given these data.[^4] As shown in the first row of Table 1, even when the study with the largest sample size has a large effect, Fisher's method has less than 10% power to detect it. When the non-null effects come from the studies with the largest sample sizes, about half of the studies need to have $\delta=0.2$ in order to achieve approximately 80% power (power=0.8340). 
+In order to consider the power of Fisher's test under a "best-case scenario" in the OSC dataset, we sort the 64 sample sizes and let the non-null effects be from the studies with the largest sample sizes first. That is, if there is just one non-null effect we let it be from the largest study; if there are two non-null effects we let them be from the two largest studies, etc.[^3] This will provide the highest possible power of Fisher's method given these data.[^4] As shown in the first row of Table 1, even when the study with the largest sample size has a large effect, Fisher's method has less than 10% power to detect it. When the non-null effects come from the studies with the largest sample sizes, about half of the studies need to have $\delta=0.2$ in order to achieve approximately 80% power (power=0.8340). 
 
 Table: Power of Fisher's method given large sample sizes for varying $\delta$ and true # of non-null effects (i.e. "Best-case scenario")
 ```{r, echo=FALSE}
@@ -49,9 +47,9 @@ library(knitr)
 table <- readRDS("./power_large_n.RDS")
 kable(table,format="markdown",digits=4,align=c('l','r','r','r'),col.names=c("# of non-null effects","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"),caption="Power to reject H0 with large n")
 ```
-[^3]:This provides a "best-case scenario" because large $n_j$'s lead to smaller $p_j$'s, which in turn result in a larger test statistic $X^2$ and greater likelihood of rejecting $H_0$ (i.e. higher power).
+[^3]:Note that because we are working with a set of replicate studies which found a p-value greater than 0.05, pairing large effects with very large sample sizes is not realistic, and therefore we begin the simulations with the largest $n_j$ among the studies for which the power is at most 99.99% to detect the given $\delta_j$. The largest sample sizes used for $\delta_j=0.2; 0.5$; and $0.8$ were $n_j=745; 159;$ and $100$ respectively. See Appendix A.2 for further discussion.
 
-[^4]:Note that because we are working with a set of replicate studies which found a p-value greater than 0.05, pairing large effects with very large sample sizes is not realistic, and therefore we begin the simulations with the largest $n_j$ among the studies for which the power is at most 99.99% to detect the given $\delta_j$. The largest sample sizes used for $\delta_j=0.2; 0.5$; and $0.8$ were $n_j=745; 159;$ and $100$ respectively. See Appendix A.2 for further discussion.
+[^4]:This provides a "best-case scenario" because large $n_j$'s lead to smaller $p_j$'s, which in turn result in a larger test statistic $X^2$ and greater likelihood of rejecting $H_0$ (i.e. higher power).
 
 We now consider the power of Fisher's method under more general circumstances. Figure 1 plots the power of Fisher's method against the proportion of studies with false negatives, for varying numbers of total studies ($k$), effect sizes ($\delta$), and within-group within-study sample sizes ($n$). 
 
@@ -72,6 +70,7 @@ k100$prop <- k100$M/k100$k
 all <- rbind(k10,k50,k100)
 plot_all <- ggplot(all, aes(x = prop, y = power, color = factor(delta))) +
   facet_grid(k~n, labeller = labeller(n = n_labels, k = k_labels)) +
+  #facet_grid(~n, labeller = labeller(n = n_labels)) +
   theme(panel.grid.minor = element_blank(),
         axis.ticks = element_blank(), plot.title = element_text(hjust = 0.5)) +
   scale_color_brewer(palette="Dark2")+
@@ -86,16 +85,15 @@ plot_all <- ggplot(all, aes(x = prop, y = power, color = factor(delta))) +
 plot_all
 ```
 
-For example, in the first pane of the grid, the green curve indicates that when there are 10 studies each having a within-group sample sizes of 25, even when all 10 studies have true small effects, the power of Fisher's method is only around 15%. Note the general pattern: the power of Fisher's method increases as within-group sample size increases (left to right in each row), as the number of studies increases (top to bottom in each column), and as the magnitude of the true effect size increases (indicated by the color of the curve). 
+For example, in the first pane of the grid, the green curve indicates that when there are 10 studies each having within-group sample sizes of 25, even when all 10 studies have true small effects, the power of Fisher's method is only around 15%. Note the general pattern: the power of Fisher's method increases as within-group sample size increases (left to right in each row), as the number of studies increases (top to bottom in each column), and as the magnitude of the true effect size increases (indicated by the color of the curve). 
 
-As demonstrated by Figure 1, Fisher's method has a large Type II error rate under many common scenarios in social science research, and we do not recommend it as a valid metric for assessing replication. Failing to reject $H_0$ is likely an artifact of the poor properties of Fisher's method and is not valid evidence to conclude there are no false negatives. As stated previously, even in the event that $H_0$ is rejected, it tells the researcher nothing about *which* study has a non-zero effect or if the size or direction of that effect is consistent with the original study. 
+As demonstrated by Figure 1, Fisher's method has low power and thus a large Type II error rate under many common scenarios in social science research, and we do not recommend it as a valid metric for assessing replication. Failing to reject $H_0$ is often likely an artifact of the poor properties of Fisher's method and is not valid evidence to conclude there are no false negatives. The test is only adequately powered when there are many effects, potentially large in magnitude and coming from large studies. In the scenario where a researcher is combining the results of $k$ studies of the same treatment to test if an overall treatment effect $\Theta=0$, this type of conservative test may be appropriate. In the OSC scenario, however, since the 64 studies are not testing the same treatment effect, and one $\theta_j$ has no bearing on the 63 other $\theta_j$'s, the presumed goal would be to detect if there are *any* false negatives among the replicate studies. Furthermore, in the event that $H_0$ is rejected, it tells the researcher nothing about *which* study has a non-zero effect or if the size or direction of that effect is consistent with the original study. 
 
-#Appendices
+****
+#Appendix A: Fisher's method power simulations
 
-##Appendix A: Fisher's method power simulations
-
-###A.1 Power simulation logic and code
-Let there be $m$ false negatives (i.e. $m$ true non-zero effects) among the 64 studies, $m=1,...,64$. Therefore we must draw $m$ p-values from a distribution consistent with the alternative hypothesis. That is, we draw a random variable $d_j$ from a $N(\delta_j,\frac{2}{n_j} + \frac{\delta_j^2}{4n_j})$ distribution, where $\delta_j\neq0$ and compute its p-value. We continue drawing $d_j's$ until we obtain $m$ p-values greater than 0.05 (due to the OSC restriction of only considering replicate studies with non-significant results). We will draw the remaining $64-m$ p-values from a U[0.05,1] distribution and then calculate Fisher's test statistic $X^2=-2\sum_{j=1}^{k} ln(\frac{p_j-0.05}{0.95})$. We run this procedure N times and calculate the simulated power of Fisher's method under these conditions to be $\sum_{q=1}^{N}I_{\{X^2_q > \chi^2_{2k,\alpha}\}}/N,$ where $I$ is the indicator function and $\chi^2_{2k,\alpha}$ is the critical value for Fisher's test with $k$ studies and level $\alpha$. We let N=100,000. The code is given below.
+##A.1 Power simulation logic and code
+Let there be $m$ false negatives (i.e. $m$ true non-zero effects) among the $k$ studies, $m=1,...,k$. Therefore we must draw $m$ p-values from a distribution consistent with the alternative hypothesis. That is, we draw a random variable $d_j$ from a $N(\delta_j,\frac{2}{n_j} + \frac{\delta_j^2}{4n_j})$ distribution, where $\delta_j\neq0$ and compute its p-value. We continue drawing $d_j's$ until we obtain $m$ p-values greater than 0.05 (due to the OSC restriction of only considering replicate studies with non-significant results). We will draw the remaining $k-m$ p-values from a U[0.05,1] distribution and then calculate Fisher's test statistic $X^2=-2\sum_{j=1}^{k} ln(\frac{p_j-0.05}{0.95})$. We run this procedure N times and calculate the simulated power of Fisher's method under these conditions to be $\sum_{q=1}^{N}I_{\{X^2_q > \chi^2_{2k,\alpha}\}}/N,$ where $I$ is the indicator function and $\chi^2_{2k,\alpha}$ is the critical value for Fisher's test with $k$ studies and level $\alpha$. We let N=100,000. The code is given below.
 
 ```{r power_sims}
 power_sims<-function(N,M,delta,n,k){
@@ -105,45 +103,38 @@ power_sims<-function(N,M,delta,n,k){
   #        delta; effect size under alternative hypothesis, on scale of cohen's d
   #        n; vector of treatment/control sample size across studies (total sample size/2)
   #        k; number of studies
-  # RETURNS: power of Fisher's test to reject
+  # RETURNS: 5 column dataframe of results [Power N k M delta]
   # Assumes 2-sided p-values, throws away p-values<=0.05 to match OSC methods
   #########################################################################################
   
   T<-c() #empty list to store Fisher's test statistic 
-  Power<-matrix() #empty matrix to store results
-  
+  power<-matrix() #empty matrix to store results
+ 
   for(l in 1:length(M)){
-    
     for (i in 1:N){
-      
-      #print(i) # can uncomment to show progress for lengthy simulations
-    
       p0<-runif(k - M[l], 0.05, 1) #draws p-values for the true null effects
-      
       p1<-c() #create list to store p-values drawn for non-null effects
-      
       for (j in 1:M[l]){ 
-        
         p1[j]<-0
-        
         while (p1[j] <= 0.05) { #throw away p-values<=0.05
           z[j] <- rnorm(1,delta, sqrt(2/n[j] + delta^2/(4*n[j])))
           p1[j] <- 2*(1-pnorm(abs(z[j])/sqrt(2/n[j] + delta^2/(4*n[j]))))
         }
-        
-        #print(n[j]) # can uncomment to show progress for lengthy simulations 
-        }
-      
+      }
       #test statistic for Fisher's method, with transformation for truncating p-values
       T[i]<--2*sum(log((p0-0.05)/0.95))-2*sum(log((p1-0.05)/0.95)) 
-    
-      }
-    
-    Power[l]<-sum(T > qchisq(0.95, 2*k) )/N
-  
     }
-  
-    return(Power)
+    
+    power[l]<-sum(T > qchisq(0.95, 2*k) )/N
+    print(power[l])
+    if(power[l]>0.99) break
+  }
+  data <- as.data.frame(cbind(power = power, 
+                              n = n[1:length(power)], 
+                              k = rep(k,length(power)), 
+                              M = M[1:length(power)], 
+                              delta = rep(delta,length(power))))
+  return(data)
 }
 ```
 
@@ -182,44 +173,57 @@ kable(large_n_table,format="markdown",digits=1,col.names=c("$\\delta=0.2$","$\\d
 
 ```
 
-##Appendix B: Fisher's method asymptotic results
+#Appendix B: Fisher's method asymptotic results
 
-Under the Neyman and Pearson hypothesis testing framework, the significance level follows a uniform distribution on $\lbrack0,1\rbrack$ when the null hypothesis holds, however, the exact distribution under the alternative hypothesis is unknown. As a consequence of this, we rely on long known results from asymptotic theory. Lambert and Hall have shown that, given the test statistic is asymptotically normal, the one sided P-value follows a lognormal distribution with mean $-nc(\theta)$ and variance $n\tau^2(\theta)$ (1982). The parameter $c(\theta)$ is defined as half the Bahadur slope, given by $-\frac{1}{n}lim_{n\to\infty}logP_n=c(\theta)$, and is the exponential rate at which the significance level converges to zero under the alternative hypothesis. In addition, observe that the variance of the standardized P-value is $\frac {\tau^2(\theta)}{n}$. We can approximate the two sided P-value by doubling the one sided one, which implies that $P_n\sim AlogN\lbrack-\frac{1}{2}nc(\theta), \frac {1}{4}n\tau^2(\theta)\rbrack$, and thus $logP_n\sim AN\lbrack-\frac{1}{2} nc(\theta), \frac{1}{4}n\tau^2(\theta)\rbrack$. Multiplying $logP_n$ by $-2$, we obtain $-2logP_n\sim AN\lbrack nc(\theta), n\tau^2(\theta)\rbrack$. Note that $-2logP_{n_j}$, $j=1,...,k$, are asymptotically independent random variables following identical distributions, therefore under $H_a$ $$X^2_n=-2\sum_{j=1}^{k} logP_{n_j} \sim AN(\sum_{j=1}^{k}n_j c_j(\theta), \sum_{j=1}^{k}n_j \tau^2_j(\theta))$$. 
+Under the Neyman and Pearson hypothesis testing framework, the significance level follows a uniform distribution on $\lbrack0,1\rbrack$ when the null hypothesis holds, however, the exact distribution under the alternative hypothesis is unknown. As a consequence of this, we rely on long known results from asymptotic theory. Lambert and Hall have shown that, given the test statistic is asymptotically normal, the one sided P-value follows a lognormal distribution with mean $-nc(\theta)$ and variance $n\tau^2(\theta)$, where $n$ is the within group sample size (1982). The parameter $c(\theta)$ is defined as half the Bahadur slope, given by $-\frac{1}{n}lim_{n\to\infty}logP_n=c(\theta)$, and is the exponential rate at which the significance level converges to zero under the alternative hypothesis. In addition, observe that the variance of the standardized P-value is $\frac {\tau^2(\theta)}{2n}$. We can approximate the two sided P-value by doubling the one sided one, which implies that $P_n\sim AlogN\lbrack-\frac{1}{2}nc(\theta), \frac {1}{4}n\tau^2(\theta)\rbrack$, and thus $logP_n\sim AN\lbrack-\frac{1}{2} nc(\theta), \frac{1}{4}n\tau^2(\theta)\rbrack$. Multiplying $logP_n$ by $-2$, we obtain $-2logP_n\sim AN\lbrack nc(\theta), n\tau^2(\theta)\rbrack$. Note that $-2logP_{n_j}$, $j=1,...,k$, are independent random variables asymptotically following Normal distributions, therefore under $H_a$ $$X^2_n=-2\sum_{j=1}^{k} logP_{n_j} \sim AN(\sum_{j=1}^{k}n_j c_j(\theta), \sum_{j=1}^{k}n_j \tau^2_j(\theta))$$. 
 
-Examining the behavior of $X^2_n$ using simulated data, we find that the normal approximation is valid if the within study sample size $n_j$ is at least 1500, 250, and 100 for $\theta$ equal to 0.2, 0.5, and 0.8, respectively. Note that $\theta$ in this case can be interpreted as Cohen's d because $\sigma$ is assumed to be 1. When the within study sample sizes are smaller than indicated previously, the distribution of the test statistic is skewed to the right, and therefore the normal approximation is not valid.
+Now consider the two sample shift problem as an example. Let $Y_{11},Y_{21},...,Y_{n_11}$ denote a sample of i.i.d. observations from a normal distribution with mean $\mu$ and standard deviation 1. Let $Y_{12},Y_{22},...,Y_{n_22}$ denote a second sample, independent of the first, with i.i.d. observations from a normal $(\mu+\theta, 1)$. For simplicity, suppose that $n_1=n_2=n$. We test $H_0:\theta=0$ versus $H_a:\theta\neq0$ using the test statistic $\frac{\sqrt{n}(\overline{Y_2}-\overline{Y_1})}{\sqrt{2}}$. According to Lambert and Hall, $c(\theta)=\frac{1}{2}\lambda\overline{\lambda}\theta^2$ and $\tau^2(\theta)=\lambda\overline{\lambda}\theta^2$, where $\lambda$ denotes the fractional sample size, and $\overline{\lambda}=1-\lambda$. Since we are assuming $n_1=n_2$, both $\lambda$ and $\overline{\lambda}$ are $\frac{1}{2}$. Therefore, in the two-sample shift problem we have $$-2logP_{n} \sim AN(\frac{1}{4}n\theta^2, \frac{1}{2}n\theta^2).$$ Note that $\theta$ in this case can be interpreted as Cohen's d because $\sigma$ is assumed to be 1. 
 
-```{r,echo=FALSE, message=FALSE, fig.show='hold', fig.align='center'}
+Examining the behavior of $-2log(p)$ using simulated data, we find that the normal approximation is only valid for impractical within study sample sizes. The following figure shows histograms of simulated data and the corresponding normal approximations for various values of $\theta$ and $n$. Since the normal approximation is a function of $n$ and $\theta$, it can also be considered a function of the power of a single test to detect the specified $\theta$. Values of $n$ were chosen to achieve power of 0.80, 0.90, and 0.9999 for each $\theta$. For example, when $\theta=0.2$, a within-group sample size of $n=394$ is needed to achieve 80% power, and the first plot in the grid shows that the normal appoximation is poor in this scenario. Note that in most cases, the lower tail of the normal approximation includes negative values, whereas we know the true values of $-2log(p)$ can never be negative. Unless the within study sample sizes are very large, the distribution of $-2log(p)$ is skewed to the right, and therefore the normal approximation is not valid. Even in scenarios with sample sizes large enough the achieve 99.99% power (the third column in the figure), the normal distribution is only a rough approximation. 
 
-p1<-c()
-dist_of_X2<-function(delta,n){
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+diane<-function(delta,n){
+  p1<-c()
+  z <- c()
   for (j in 1:100000){ 
-    p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n + delta^2 / (4*n))))/sqrt(2/n + delta^2 / (4*n))))
+    #p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n + delta^2 / (4*n))))/sqrt(2/n + delta^2 / (4*n))))
+    #p1[j]<-2*(1 - pnorm(abs(rnorm(1, 1/2*2*n*1/4*delta^2, sqrt(2*n*1/4*delta^2)))/sqrt(2*n*1/4*delta^2)))
+    z[j] <- rnorm(1,delta, sqrt(2/n + delta^2/(4*n)))
+    p1[j] <- (1-pnorm(z[j]/sqrt(2/n + delta^2/(4*n))))
+    #p1[j] <- 2*(1-pnorm(abs(z[j])/sqrt(2/n + delta^2/(4*n)))) #two-sided
   }
-  X2<--2*log(p1)
+  D<--2*log(p1)
 }
 
-d1 <- as.data.frame(dist_of_X2(0.2,700))
-colnames(d1)[1]<-"V1"
-ggplot(d1, aes(x = V1)) +
-  geom_density()
+library(grid)
+library(gridExtra)
 
-library(latex2exp)
-par(mfrow=c(3,2))
+plot <- function(delta, n){
+  d1 <- as.data.frame(diane(delta,n))
+  colnames(d1)[1]<-"V1"
+  ggplot(d1, aes(x = V1)) +
+    theme(text =element_text(size=10), plot.title = element_text(size = 11))+
+    scale_x_continuous(name = "-2log(p)", limits = c(-20,80), breaks = seq(-20,100,20)) +
+    geom_histogram(aes(y = ..density..) , bins = 100) +
+    stat_function(fun = dnorm, args = list(mean = 2*n*1/4*delta^2, sd = sqrt(2*n*delta^2))) +
+    #stat_function(fun = dnorm, args = list(mean = 1/2*2*n*1/4*delta^2, sd = sqrt(2*n*1/4*delta^2))) + #two-sided
+  labs(title = bquote(theta == .(delta) ~ ", n" == .(n)))
+}
 
-hist(dist_of_X2(0.2,700), main=TeX('n=700, $\\theta$=0.2'), xlab=expression(-2*log(p_i)))
-x<-seq(0,60,0.1)
-curve(dnorm(x, mean = 0.5*700*2*1/4*0.2^2, sd = sqrt(2*700*1/4*0.2^2)), add = TRUE)
-hist(dist_of_X2(0.2,1500), main=TeX('n=1500, $\\theta$=0.2'), xlab=expression(-2*log(p_i)))
-
-hist(dist_of_X2(0.5,100), main=TeX('n=100, $\\theta$=0.5'),  xlab=expression(-2*log(p_i)))
-hist(dist_of_X2(0.5,250), main=TeX('n=250, $\\theta$=0.5'),  xlab=expression(-2*log(p_i)))
-
-hist(dist_of_X2(0.8,50), main=TeX('n=50, $\\theta$=0.8'),  xlab=expression(-2*log(p_i)))
-hist(dist_of_X2(0.8,100), main=TeX('n=100, $\\theta$=0.8'),  xlab=expression(-2*log(p_i)))
+quartz()
+p1 <- plot(0.2,394)
+p2 <- plot(0.2,528)
+p3 <- plot(0.2,1500)
+p4 <- plot(0.5,65)
+p5 <- plot(0.5,87)
+p6 <- plot(0.5,266)
+p7 <- plot(0.8,26)
+p8 <- plot(0.8,35)
+p9 <- plot(0.8,109)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3, top = textGrob("Normal approximation of -2log(p)"))
 ```
 
-
-Now consider the two sample shift problem as an example. Let $Y_{11},Y_{21},...,Y_{n1}$ denote a sample of i.i.d. observations from a normal distribution with mean $\mu$ and standard deviation 1. Let $Y_{12},Y_{22},...,Y_{n2}$ denote a second sample, independent of the first, with i.i.d. observations from a normal $(\mu+\theta, 1)$. For simplicity, suppose that $n_1$ and $n_2$ are equal. We test $H_0:\theta=0$ versus $H_a:\theta\neq0$ by using $\frac{\sqrt{n}(\overline{Y_2}-\overline{Y_1})}{\sqrt{2}}$. According to Lambert and Hall, $c(\theta)=\frac{1}{2}\lambda\overline{\lambda}\theta^2$ and $\tau^2(\theta)=\lambda\overline{\lambda}\theta^2$, where $\lambda$ denotes the fractional sample size, and $\overline{\lambda}=1-\lambda$. Since we are assuming $n_1$ is equal to $n_2$, both $\lambda$ and $\overline{\lambda}$ are $\frac{1}{2}$. Then, if all k studies are testing the same hypothesis, it follows that $X^2_n$ is asymptotically normal with grand mean $\sum_{j=1}^{k}\frac{1}{2}n_j \lambda_j \overline{\lambda_j}\theta_j^2$ and grand variance $\sum_{j=1}^{k}n_j \lambda_j \overline{\lambda_j}\theta_j^2$. Consequently, the asymptotic power is:
+The asymptotic results can confirm that the power of Fisher's method approaches 1 as the within study sample sizes go to infinity, which is consistent with the power simulations presented in the body of the paper. To see this, note that if all $k$ studies are testing the same hypothesis, it follows that $X^2_n$ is asymptotically normal with grand mean $\sum_{j=1}^{k}\frac{1}{2}n_j \lambda_j \overline{\lambda_j}\theta_j^2$ and grand variance $\sum_{j=1}^{k}n_j \lambda_j \overline{\lambda_j}\theta_j^2$. Consequently, the asymptotic power of Fisher's test is:
 
 $$\begin{aligned}
 Power&=Pr(reject \ H_0 \ | \ H_a \ is \ true)\\
@@ -227,18 +231,31 @@ Power&=Pr(reject \ H_0 \ | \ H_a \ is \ true)\\
 &=1-Pr(|X^2_n| \ < \ \chi^2_{2k} \ | \ H_a \ is \ true)\\
 &=1-\Phi\Big(\frac{\chi^2_{2k}-\sum_{j=1}^{k} \frac{1}{2} n_j\lambda_j \overline{\lambda}_j\theta^2_j}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}\Big)+\Phi\Big(\frac{-\chi^2_{2k}-\sum_{j=1}^{k} \frac{1}{2} n_j\lambda_j \overline{\lambda}_j\theta^2_j}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}\Big)\\
 &=1-\Phi\Big(\frac{\chi^2_{2k}}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}-\frac{1}{2}\Big)+\Phi\Big(\frac{-\chi^2_{2k}}{\sum_{j=1}^{k}n_j\lambda_j \overline{\lambda}_j\theta^2_j}-\frac{1}{2}\Big)\\
+&\xrightarrow{}1-\Phi(-\frac{1}{2})+\Phi(-\frac{1}{2}) ~~ as ~~ n\rightarrow \infty\\
 &=1
 \end{aligned}.$$
 
-The following plots of the power function reveal that asymptotic power approaches 1 when the total within study sample size is greater than 600, 100, and 50 for a fixed $\theta$ of 0.2, 0.5, and 0.8, respectively. 
+Shown for the the case when $k=64$, the following plots of the power function reveal that asymptotic power approaches 1 when the total within study sample sizes are approximately 600, 100, and 40 for fixed $\theta$'s of 0.2, 0.5, and 0.8, respectively. 
 
-```{r prt 1, echo=FALSE, message=FALSE, fig.width=3, fig.height=5,fig.show='hold',fig.align='center'}
-power<-function(n,delta){
-  1-pnorm(155.4047, mean=64*(1/2)*n*(1/4)*(delta^2), sqrt(64*n*(1/4)*(delta^2)))+pnorm(-155.4047, mean=64*(1/2)*n*(1/4)*(delta^2), sqrt(64*n*(1/4)*(delta^2)))
+```{r prt 1, echo=FALSE, message=FALSE, warning = FALSE}
+power_asymp<-function(n,delta){
+  delta <- rep(delta,length(n))
+  power <- 1-pnorm(155.4047, mean=64*(1/2)*n*(1/4)*(delta^2), sqrt(64*n*(1/4)*(delta^2)))+pnorm(-155.4047, mean=64*(1/2)*n*(1/4)*(delta^2), sqrt(64*n*(1/4)*(delta^2)))
+  data <- as.data.frame(cbind(n,power, delta))
+  return(data)
 }
-require(latex2exp)
-par(mfrow=c(3,1))
-plot(power(1:700,0.2), type='l', xlab='n', ylab='Power', main=TeX('$\\theta$=0.2'))
-plot(power(1:700,0.5), type='l', xlab='n', ylab='Power', main=TeX('$\\theta$=0.5'))
-plot(power(1:700,0.8), type='l', xlab='n', ylab='Power', main=TeX('$\\theta$=0.8'))
+n <- seq(1,700,1)
+power_0.2 <- power_asymp(n, 0.2)
+power_0.5 <- power_asymp(n, 0.5)
+power_0.8 <- power_asymp(n, 0.8)
+power_all <- as.data.frame(rbind(power_0.2,power_0.5,power_0.8))
+
+ggplot(power_all, aes(x = n, y = power)) +
+ theme(panel.grid.minor = element_blank(),
+        axis.ticks = element_blank(), plot.title = element_text(hjust = 0.5)) +
+  facet_grid(delta ~ . , labeller = label_bquote(rows = theta == .(delta)))+
+  scale_x_continuous(name = "Within group sample size (n)", limits = c(0,700), breaks = seq(0,700,100)) +
+    scale_y_continuous(name = "Power", limits = c(0,1), breaks = seq(0, 1, 0.2)) +
+  labs(title = "Aymptotic Power of Fisher's Method Based on Normal Approximation") +
+  geom_line()
 ```

@@ -126,3 +126,24 @@ k10_n100_d.8$delta <- rep(0.8, dim(k10_n100_d.8)[1])
 
 k10 <- rbind(k10_n25_d.2,k10_n25_d.5,k10_n25_d.8,k10_n50_d.2,k10_n50_d.5,k10_n50_d.8,k10_n75_d.2, k10_n75_d.5, k10_n75_d.8,k10_n100_d.2,k10_n100_d.5,k10_n100_d.8)
 saveRDS(k10,"k10_data.RDS")
+
+#########NEW SIMS TO FILL IN GAPS######
+run <- power_sims(N= 10, M = c(6,7,8,9),delta = 0.2, n = rep(25,10), k =10)
+
+k10_n25_d.2_extra <- power_sims(100000, c(6,7,8,9), 0.2, rep(25,10), 10)
+k10_n25_d.5_extra <- power_sims(100000, c(6,7,8,9), 0.5, rep(25,10), 10)
+k10_n25_d.8_extra <- power_sims(100000, c(6,7,8,9), 0.8, rep(25,10), 10)
+
+k10_n50_d.2_extra <- power_sims(100000, c(6,7,8,9), 0.2, rep(50,10), 10)
+k10_n50_d.5_extra <- power_sims(100000, c(6,7,8,9), 0.5, rep(50,10), 10)
+k10_n50_d.8_extra <- power_sims(100000, c(6,7), 0.8, rep(50,10), 10) #check one at a time, stop once gets to .99 power
+
+k10_n75_d.2_extra <- power_sims(100000, c(6,7,8,9), 0.2, rep(75,10), 10)
+k10_n75_d.5_extra <- power_sims(100000, c(6,7,8,9), 0.5, rep(75,10), 10)
+k10_n75_d.8_extra <- power_sims(100000, 6, 0.8, rep(75,10), 10) #check one at a time, stop once gets to .99 power
+
+k10_n100_d.2_extra <- power_sims(100000, c(6,7,8,9), 0.2, rep(100,10), 10)
+k10_n100_d.5_extra <- power_sims(100000, c(6,7), 0.5, rep(100,10), 10) #check
+
+k10_data <- rbind(k10_data, k10_n25_d.2_extra,k10_n25_d.5_extra, k10_n25_d.8_extra, k10_n50_d.2_extra, k10_n50_d.5_extra, k10_n50_d.8_extra,k10_n75_d.2_extra,k10_n75_d.5_extra,k10_n75_d.8_extra, k10_n100_d.2_extra,k10_n100_d.5_extra)
+saveRDS(k10_data,"k10_data.RDS")

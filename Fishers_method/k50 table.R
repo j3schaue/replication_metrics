@@ -108,3 +108,31 @@ ggplot(k50, aes(x = M, y = power, color = factor(delta))) +
   labs(title = "Power of Fisher's method for k=50 studies", color = expression(delta))+
   geom_smooth(method = "loess", se = FALSE, size = 0.5)
   #geom_line()
+
+
+####NEW SIMS TO FILL IN GAPS###
+k50_n25_d.2_extra <- power_sims(100000, c(15,20,30,35,40,45), 0.2, rep(25, 50), 50)
+k50_n25_d.5_extra <- power_sims(100000, c(15,20,30,35,40,45), 0.5, rep(25, 50), 50)
+k50_n25_d.8_extra <- power_sims(100000, c(15,20), 0.8, rep(25, 50), 50)
+
+k50_n50_d.2_extra <- power_sims(100000, c(15,20,30,35,40,45), 0.2, rep(50, 50), 50)
+k50_n50_d.5_extra <- power_sims(100000, c(15,20), 0.5, rep(50, 50), 50)
+k50_n50_d.8_extra <- power_sims(100000, c(15,20), 0.8, rep(50, 50), 50) 
+
+k50_n75_d.2_extra <- power_sims(100000, c(15,20,30,35,40,45), 0.2, rep(75, 50), 50)
+k50_n75_d.5_extra <- power_sims(100000, c(15,20), 0.5, rep(75, 50), 50)
+k50_n75_d.8_extra <- power_sims(100000, c(15,20), 0.8, rep(75, 50), 50) 
+
+k50_n100_d.2_extra <- power_sims(100000, c(15,20,30,35,40,45), 0.2, rep(100, 50), 50)
+k50_n100_d.5_extra <- power_sims(100000, c(15,20), 0.5, rep(100, 50), 50) 
+k50_n100_d.8_extra <- power_sims(100000, c(15), 0.8, rep(100, 50), 50) 
+
+k50 <- readRDS("./k50_data.RDS")
+k50_list <- list(k50, k50_n25_d.2_extra,k50_n25_d.5_extra, k50_n25_d.8_extra, k50_n50_d.2_extra, k50_n50_d.5_extra, k50_n50_d.8_extra,k50_n75_d.2_extra,k50_n75_d.5_extra,k50_n75_d.8_extra, k50_n100_d.2_extra,k50_n100_d.5_extra,k50_n100_d.8_extra)
+ChangeNames <- function(x) {
+  names(x)[1] <- "power"
+  return(x)
+}
+k50_list <- lapply(k50_list, ChangeNames)
+k50_data <- ldply(k50_list, data.frame)
+saveRDS(k50_data,"k50_data.RDS")

@@ -1,48 +1,51 @@
-power_sims<-function(N,M,delta,n,K){
+power_sims<-function(N,M,delta,n,k){
   #########################################################################################
   # TAKES: N; number of simulations 
   #        M; vector of number of non-null effects
   #        delta; effect size under alternative hypothesis, on scale of cohen's d
   #        n; vector of treatment/control sample size across studies (total sample size/2)
-  #        K; number of studies
-  # RETURNS: power of Fisher's test to reject
+  #        k; number of studies
+  # RETURNS: 5 column dataframe of results [Power N k M delta]
   # Assumes 2-sided p-values, throws away p-values<=0.05 to match OSC methods
   #########################################################################################
   
   T<-c() #empty list to store Fisher's test statistic 
-  Power<-matrix() #empty matrix to store results
-  
-  for(k in 1:length(M)){
+  power<-matrix() #empty matrix to store results
+ 
+  for(l in 1:length(M)){
     
     for (i in 1:N){
       
-      print(i) # can uncomment to show progress for lengthy simulations
-    
-      p0<-runif(K - M[k], 0.05, 1) #draws p-values for the true null effects
+      #print(i) # can uncomment to show progress for lengthy simulations
+      
+      p0<-runif(k - M[l], 0.05, 1) #draws p-values for the true null effects
       
       p1<-c() #create list to store p-values drawn for non-null effects
       
-      for (j in 1:M[k]){ 
+      for (j in 1:M[l]){ 
         
         p1[j]<-0
         
         while (p1[j] <= 0.05) { #throw away p-values<=0.05
-          p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n[j] + delta^2/(4*n[j]))))/sqrt(2/n[j] + delta^2/(4*n[j]))))
+          z[j] <- rnorm(1,delta, sqrt(2/n[j] + delta^2/(4*n[j])))
+          p1[j] <- 2*(1-pnorm(abs(z[j])/sqrt(2/n[j] + delta^2/(4*n[j]))))
         }
         
-        print(n[j]) # can uncomment to show progress for lengthy simulations 
-        }
+        #print(n[j]) # can uncomment to show progress for lengthy simulations 
+      }
       
       #test statistic for Fisher's method, with transformation for truncating p-values
       T[i]<--2*sum(log((p0-0.05)/0.95))-2*sum(log((p1-0.05)/0.95)) 
-    
-      }
-    
-    Power[k]<-sum(T > qchisq(0.95, 2*K) )/N
-  
+      
     }
+    
+    power[l]<-sum(T > qchisq(0.95, 2*k) )/N
+    print(power[l])
+    if(power[l]>0.99) break
+  }
   
-    return(Power)
+  data <- as.data.frame(cbind(power = power, n = n[1:length(power)], k = rep(k,length(power)), M = M[1:length(power)], delta = rep(delta,length(power))))
+  return(data)
 }
 
 M<-c(1,2,3,4,5,10,32,64) #vector of number of non-null effects

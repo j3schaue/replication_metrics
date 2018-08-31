@@ -149,6 +149,33 @@ ggplot(k100, aes(x = M, y = power, color = factor(delta))) +
   geom_line()
 
 
+#####NEW SIMS TO FILL IN GAPS#####
+k100_n25_d.2_extra <- power_sims(100000, c(20,30,40,60,70,80,90), 0.2, rep(25, 100), 100)
+k100_n25_d.5_extra <- power_sims(100000, c(20,30,40), 0.5, rep(25, 100), 100)
+k100_n25_d.8_extra <- power_sims(100000, c(20,30,40), 0.8, rep(25, 100), 100)
+
+k100_n50_d.2_extra <- power_sims(100000, c(20,30,40,60,70,80,90), 0.2, rep(50, 100), 100)
+k100_n50_d.5_extra <- power_sims(100000, c(20,30,40), 0.5, rep(50, 100), 100)
+k100_n50_d.8_extra <- power_sims(100000, c(20,30,40), 0.8, rep(50, 100), 100) 
+
+k100_n75_d.2_extra <- power_sims(100000, c(20,30,40,60,70,80,90), 0.2, rep(75, 100), 100)
+k100_n75_d.5_extra <- power_sims(100000, c(20,30,40), 0.5, rep(75, 100), 100)
+k100_n75_d.8_extra <- power_sims(100000, c(20,30,40), 0.8, rep(75, 100), 100) 
+
+k100_n100_d.2_extra <- power_sims(100000, c(20,30,40,60,70,80,90), 0.2, rep(100, 100), 100)
+k100_n100_d.5_extra <- power_sims(100000, c(20,30,40), 0.5, rep(100, 100), 100) 
+k100_n100_d.8_extra <- power_sims(100000, c(20,30,40), 0.8, rep(100, 100), 100)
+
+k100 <- readRDS("./k100_data.RDS")
+k100_list <- list(k100, k100_n25_d.2_extra,k100_n25_d.5_extra, k100_n25_d.8_extra, k100_n50_d.2_extra, k100_n50_d.5_extra, k100_n50_d.8_extra,k100_n75_d.2_extra,k100_n75_d.5_extra,k100_n75_d.8_extra, k100_n100_d.2_extra,k100_n100_d.5_extra,k100_n100_d.8_extra)
+ChangeNames <- function(x) {
+  names(x)[1] <- "power"
+  return(x)
+}
+k100_list <- lapply(k100_list, ChangeNames)
+k100_data <- ldply(k100_list, data.frame)
+saveRDS(k100_data,"k100_data.RDS")
+
 ################ EXTRA CODE
 n<-rep(100,100)
 power_delta_0.8_k100_n100_M1 <-power_sims(100000,1,0.8,n,100)
@@ -191,7 +218,7 @@ plot_k10 <- ggplot(k10, aes(x = prop, y = power, color = factor(delta))) +
   labs(title = "Power of Fisher's method for k=10 studies", color = expression(delta))+
   geom_smooth(method = "loess", se = FALSE, size = 0.5)
 
-plot_k50 <- ggplot(k50, aes(x = prop, y = power, color = factor(delta))) +
+plot_k100 <- ggplot(k100, aes(x = prop, y = power, color = factor(delta))) +
   theme(panel.grid.minor = element_blank(),
         axis.ticks = element_blank(), plot.title = element_text(hjust = 0.5)) +
   scale_color_brewer(palette="Dark2")+
@@ -216,5 +243,5 @@ plot_k100 <- ggplot(k100, aes(x = prop, y = power, color = factor(delta))) +
   geom_line()
 
 library(gridExtra)
-grid.arrange(plot_k10, plot_k50, plot_k100, nrow = 3)
+grid.arrange(plot_k10, plot_k100, plot_k100, nrow = 3)
 
