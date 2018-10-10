@@ -21,7 +21,7 @@ power_sims<-function(N,M,delta,n,k){
       p0<-runif(k - M[l], 0.05, 1) #draws p-values for the true null effects
       
       p1<-c() #create list to store p-values drawn for non-null effects
-      
+      z<-c()
       for (j in 1:M[l]){ 
         
         p1[j]<-0
