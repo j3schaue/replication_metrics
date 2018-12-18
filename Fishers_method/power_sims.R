@@ -48,7 +48,7 @@ power_sims<-function(N,M,delta,n,k){
   return(data)
 }
 
-M<-c(1,2,3,4,5,10,32,64) #vector of number of non-null effects
+M<-c(1,2,3) #vector of number of non-null effects
 n<-38 #median sample size (76) divided by 2 
 power_delta_0.2<-power_sims(100000,M,0.2,n)
 power_delta_0.5<-power_sims(100000,M,0.5,n)
