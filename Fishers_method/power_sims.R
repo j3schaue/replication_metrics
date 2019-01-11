@@ -48,34 +48,61 @@ power_sims<-function(N,M,delta,n,k){
   return(data)
 }
 
-M<-c(1,2,3) #vector of number of non-null effects
-n<-38 #median sample size (76) divided by 2 
-power_delta_0.2<-power_sims(100000,M,0.2,n)
-power_delta_0.5<-power_sims(100000,M,0.5,n)
-power_delta_0.8<-power_sims(100000,M,0.8,n)
+########################################
+### RPP DATA SIMULATIONS             ###
+########################################
 
-power_sims_table<-data.frame(M,power_0.2,power_0.5,power_0.8)
-saveRDS(power_sims_table,"Fisher_power_sims.Rds")
 
 #test upper bounds of power (by largest sample size study having false negatives)
-rpp_data<-read.csv("~/Desktop/NU/Replication/replication_metrics/data/rpp_data.csv")
-data_forFisher<- rpp_data[ !is.na(rpp_data$T_pval_USE..R.) & (rpp_data$T_pval_USE..R.>0.05)  , ]
-n<-sort(data_forFisher$N..R.,decreasing=TRUE)/2
+rpp_data_cleaned <- read_csv("Fishers_method/rpp_data_cleaned.csv")
+rpp_fishers <- subset(rpp_data_cleaned, rpp_data_cleaned$replicate == 1 & rpp_data_cleaned$pvalr > 0.05)
+
+#compute effectve sample size based on effect size and variance
+rpp_fishers$n_effective <- (8+(rpp_fishers$d)^2)/(4*rpp_fishers$vd)
+rpp_fishers$n_effective <- ifelse(rpp_fishers$experiment == "Koo", max(rpp_fishers$n_effective,na.rm =TRUE), rpp_fishers$n_effective)
+n<-sort(rpp_fishers$n_effective,decreasing=TRUE, na.last = TRUE)
 
 source("./src/metrics_funs.R")
-replicate_power<-data.frame(n,power_delta_0.2=power_fun(0.2,2/n),power_delta_0.5=power_fun(0.5,2/n),power_delta_0.8=power_fun(0.8,2/n))
+replicate_power<-data.frame(n,power_delta_0.2=power_fun(0.2,2/n + 0.2^2/(4*n)),power_delta_0.5=power_fun(0.5,2/n + 0.5^2/(4*n)),power_delta_0.8=power_fun(0.8,2/n + 0.8^2/(4*n)))
 #set largest to be the largest sample size among the studies for which there was at most 99.99% power for a given delta
-n_delta_0.2<-c(745,n[2:64]) #largest study had >99.99% power to detect delta=0.2
-n_delta_0.5<-c(rep(159,3),n[4:64])#3 largest studies had >99.99% power to detect delta=0.5
-n_delta_0.8<-c(rep(100,11),n[12:64]) #11 largest studies had >99.99% power to detect delta=0.8
-delta_0.2_large_n<-power_sims(100000,M,0.2,n_delta_0.2) #starts at n=745
-delta_0.5_large_n<-power_sims(100000,M,0.5,n_delta_0.5) #starts at n=159
-delta_0.8_large_n<-power_sims(100000,M,0.8,n_delta_0.8) #starts at n=100
+n_delta_0.2<- n #all studies had <99.99% power to detect delta=0.2
+n_delta_0.5<-c(rep(replicate_power$n[4],3),n[4:64])#3 largest studies had >99.99% power to detect delta=0.5
+n_delta_0.8<-c(rep(replicate_power$n[12],11),n[12:64]) #11 largest studies had >99.99% power to detect delta=0.8
 
-large_n_used<-data.frame(n_delta_0.2,n_delta_0.5,n_delta_0.8)
-power_large_n<-data.frame(M,delta_0.2_large_n,delta_0.5_large_n,delta_0.8_large_n)
-saveRDS(power_large_n,"power_large_n.RDS")
-saveRDS(large_n_used,"large_n_used.RDS")
+M <- c(1,2,3,4,5,round(64*seq(0.1,1,0.1))) #want simulations for 1-5 studies and at each 10th percentile
+delta_0.2_large_n<-power_sims(100000, M, 0.2, n_delta_0.2, 64) #starts at n=745
+delta_0.5_large_n<-power_sims(100000, M, 0.5, n_delta_0.5, 64) #starts at n=159
+delta_0.8_large_n<-power_sims(100000, M, 0.8, n_delta_0.8, 64) #starts at n=100
+
+rpp_power_results <- rbind(delta_0.2_large_n, delta_0.5_large_n, delta_0.8_large_n)
+saveRDS(rpp_power_results ,"rpp_power_results.RDS")
+
+
+########################################
+### RPE DATA SIMULATIONS             ###
+########################################
+
+full_data_rep_fisher <- readRDS("Fishers_method/full_data_rep_fisher.RDS")
+rpe_fishers <- full_data_rep_fisher[full_data_rep_fisher$data == "RPE" & full_data_rep_fisher$site == "replicate" & full_data_rep_fisher$replicated == 0,]
+
+rpe_fishers$n_effective <- (8+(rpe_fishers$d)^2)/(4*rpe_fishers$vd)
+n<-sort(rpe_fishers$n_effective,decreasing=TRUE, na.last = TRUE)
+
+source("./src/metrics_funs.R")
+replicate_power<-data.frame(n,power_delta_0.2=power_fun(0.2,2/n + 0.2^2/(4*n)),power_delta_0.5=power_fun(0.5,2/n + 0.5^2/(4*n)),power_delta_0.8=power_fun(0.8,2/n + 0.8^2/(4*n)))
+#set largest to be the largest sample size among the studies for which there was at most 99.99% power for a given delta
+n_delta_0.2<- n #all studies had <99.99% power to detect delta=0.2
+n_delta_0.5<-n #all studies had <99.99% power to detect delta=0.5
+n_delta_0.8<-c(rep(replicate_power$n[3],2),n[3:7]) #11 largest studies had >99.99% power to detect delta=0.8
+
+M <- c(1,2,3,4,5,6,7)
+delta_0.2_large_n<-power_sims(100000, M, 0.2, n_delta_0.2, 7) #starts at n=745
+delta_0.5_large_n<-power_sims(100000, M, 0.5, n_delta_0.5, 7) #starts at n=159
+delta_0.8_large_n<-power_sims(100000, M, 0.8, n_delta_0.8, 7) #starts at n=100
+
+rpe_power_results <- rbind(delta_0.2_large_n, delta_0.5_large_n, delta_0.8_large_n)
+saveRDS(rpe_power_results ,"rpe_power_results.RDS")
+
 
 ###CREATE PLOT####
 k10 <- readRDS("./k10_data.RDS")
