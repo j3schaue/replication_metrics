@@ -1,4 +1,4 @@
-power_sims<-function(N,M,delta,n,k){
+power_sims<-function(N, M, delta, n, k){
   #########################################################################################
   # TAKES: N; number of simulations 
   #        M; vector of number of non-null effects
@@ -44,7 +44,7 @@ power_sims<-function(N,M,delta,n,k){
     if(power[l]>0.99) break
   }
   
-  data <- as.data.frame(cbind(power = power, n = n[1:length(power)], k = rep(k,length(power)), M = M[1:length(power)], delta = rep(delta,length(power))))
+  data <- as.data.frame(cbind(power = power, k = rep(k,length(power)), M = M[1:length(power)], delta = rep(delta,length(power))))
   return(data)
 }
 
@@ -52,6 +52,7 @@ power_sims<-function(N,M,delta,n,k){
 ### RPP DATA SIMULATIONS             ###
 ########################################
 
+library(tidyverse)
 
 #test upper bounds of power (by largest sample size study having false negatives)
 rpp_data_cleaned <- read_csv("Fishers_method/rpp_data_cleaned.csv")

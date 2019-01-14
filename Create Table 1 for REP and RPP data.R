@@ -10,3 +10,46 @@ rpp$z.test <- rpp$d/sqrt(rpp$vd)
 rpp_fishers <- subset(rpp_data_cleaned, rpp_data_cleaned$replicate == 1 & rpp_data_cleaned$pvalr > 0.05)
 
 rpp_fishers$n_effective <- (8+(rpp_fishers$d)^2)/(4*rpp_fishers$vd)
+
+#01-14-19
+rpp_power_results_delta_0.2 <- readRDS("Fishers_method/rpp_power_results_delta_0.2.RDS")
+rpp_power_results_delta_0.5 <- readRDS("Fishers_method/rpp_power_results_delta_0.5.RDS")
+rpp_delta_0.5_fillin_power100 <- rpp_power_results_delta_0.2 %>% filter(M > max(rpp_power_results_delta_0.5$M)) %>% mutate(power = 1, delta = 0.5)
+rpp_power_results_delta_0.8 <- readRDS("Fishers_method/rpp_power_results_delta_0.8.RDS")
+rpp_delta_0.8_fillin_power100 <- rpp_power_results_delta_0.2 %>% filter(M > max(rpp_power_results_delta_0.8$M)) %>% mutate(power = 1, delta = 0.8)
+rpp_power_results <- rbind(rpp_power_results_delta_0.2, rpp_power_results_delta_0.5, rpp_delta_0.5_fillin_power100, rpp_power_results_delta_0.8, rpp_delta_0.8_fillin_power100)
+
+library(ggplot2)
+n_labels <- c('25' = "n=25", '50' = "n=50", '75' = "n=75", '100'= "n=100")
+k_labels <- c( '10' = "k=10", '50' = "k=50", '100' = "k=100")
+rpp_power_results$prop <- rpp_power_results$M / rpp_power_results$k
+
+library(wesanderson) # color palettes
+zs1 = wes_palette("Zissou1")
+dj1 = wes_palette("Darjeeling1")
+dj2 = wes_palette("Darjeeling2")
+
+# standard theme for plots
+stdtheme = theme(panel.grid.minor = element_blank(),
+                 axis.ticks = element_blank(),
+                 axis.text = element_text(size = 16),
+                 axis.title = element_text(size = 18),
+                 legend.title = element_text(size = 16),
+                 legend.text = element_text(size = 16),
+                 legend.text.align = 0)
+
+plot_rpp <- ggplot(rpp_power_results, aes(x = prop, y = power, color = factor(delta))) +
+  #facet_grid(k~n, labeller = labeller(n = n_labels, k = k_labels)) +
+  #theme(panel.grid.minor = element_blank(),
+        #axis.ticks = element_blank(), plot.title = element_text(hjust = 0.5)) +
+  stdtheme +
+  #scale_color_brewer(palette="Dark2")+
+  scale_x_continuous(name = "Proportion of false negatives") +
+  scale_y_continuous(name = "Power")+
+  #geom_point(size = 3) +
+  #facet_grid(.~n, labeller = labeller(n = labels)) +
+  labs(title = "Power of Fisher's method: RPP", color = expression(delta))+
+  #geom_smooth(method = "loess", se = FALSE, size = 0.5)
+  geom_line()
+
+rpe_power_results <- readRDS("Fishers_method/rpe_power_results.RDS")
