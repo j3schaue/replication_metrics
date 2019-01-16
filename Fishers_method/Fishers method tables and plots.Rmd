@@ -15,7 +15,7 @@ Table: RPE- Power of Fisher's method given large sample sizes for varying $\delt
 ```{r, echo=FALSE, warning= FALSE, message = FALSE}
 library(knitr)
 library(tidyverse)
-RPP_RPE_power_results <- readRDS("RPP_RPE_power_results.RDS")
+RPP_RPE_power_results <- readRDS("./RPP_RPE_power_results.RDS")
 table <- spread(RPP_RPE_power_results, key = delta, value = power)
 table_rpp <- table[table$study == "RPP", -c(1,3, 4)]
 table_rpe <- table[table$study == "RPE", -c(1,3, 4)]
