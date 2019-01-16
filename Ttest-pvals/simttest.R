@@ -21,10 +21,11 @@ source("./src/metrics_funs.R")
 ## T-Test Function
 ##-----------------------------------------------##
 
-ttestsim<-function(N, theta1,theta2, theta3, powern1, powern2, powern3){
+ttestsim<-function(N, n, theta1,theta2, theta3, powern1, powern2, powern3){
   
   #############################################
   # TAKES: N; Number of simulations
+  #       n; number of pairs
   #       theta1; theta coulmn 1
   #       theta2; theta coulmn 2
   #       theta3; theta coulmn 3
@@ -38,11 +39,11 @@ ttestsim<-function(N, theta1,theta2, theta3, powern1, powern2, powern3){
   tmatrix<-matrix(data = NA, nrow = N, ncol = 3)
   for (k in 1:N){
     
-    t1<-rep(theta1, 100) # theta values column 1
+    t1<-rep(theta1, n) # theta values column 1
     sim_1<-simulate_studies(t1, 2/(powern1)) # sample size needed for given power depending on theta1 
-    t2<-rep(theta2, 100) # theta values column 2
+    t2<-rep(theta2, n) # theta values column 2
     sim_2<-simulate_studies(t2, 2/(powern2)) # samples size needed for given power depending on theta2
-    t3<-rep(theta3,100) # theta values column 3
+    t3<-rep(theta3, n) # theta values column 3
     sim_3<-simulate_studies(t3, 2/(powern3)) # samples size needed for given power depending on theta3
     
     #difference in each pvalue
@@ -52,9 +53,9 @@ ttestsim<-function(N, theta1,theta2, theta3, powern1, powern2, powern3){
     
     # find t statistics
     # single t statistics for given disparity
-    ts1<- mean(diff_1)/(sd(diff_1)/10)
-    ts2<- mean(diff_2)/(sd(diff_2)/10)
-    ts3<- mean(diff_3)/(sd(diff_3)/10)
+    ts1<- mean(diff_1)/(sd(diff_1)/sqrt(n))
+    ts2<- mean(diff_2)/(sd(diff_2)/sqrt(n))
+    ts3<- mean(diff_3)/(sd(diff_3)/sqrt(n))
     
     tmatrix[k,1]<-ts1
     tmatrix[k,2]<-ts2
@@ -71,6 +72,7 @@ ttestsim<-function(N, theta1,theta2, theta3, powern1, powern2, powern3){
 ##-----------------------------------------------##
 
 N<- 10000
+n<-100
 tab<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(c("Power 80", "Power 60", "Power 40"), c("Org. 0.2 Rep. 0.5", "Org. 0.2 Rep. 0.8", "Org. 0.5 Rep. 0.8")))
 # 80 % power
 theta1<-0.2
@@ -131,9 +133,9 @@ theta1<-0.2
 theta2<-0.2
 theta3<-0.2
 
-n1<-147
-n2<-245
-n3<-393
+n1<-145.6332
+n2<-244.9453
+n3<-392.4541
 
 thetasmall<-ttestsim(N, theta1, theta2, theta3, n1, n2, n3)
 
@@ -276,3 +278,48 @@ tab4[3,2]<-sum(abs(thetalarge[,2]) > 1.98)/N # prob of test concluding that they
 tab4[3,3]<-sum(abs(thetalarge[,3]) > 1.98)/N # prob of test concluding that they are different for 60 and 80 power
 
 tab4
+
+#########################################################################################################
+#########################################################################################################
+# different n's
+tablediffpowerthetatwo<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(c("100 n", "50 n", "25 n"), c("Power 40/Power 60", "Power 40/Power 80", "Power 60/Power 80")))
+# theta 0.2 with power 40,60,80
+theta1<-0.2
+theta2<-0.2
+theta3<-0.2
+
+n1<-145.6332
+n2<-244.9453
+n3<-392.4541
+n<-100
+thetasmall<-ttestsim(N,n, theta1, theta2, theta3, n1, n2, n3)
+
+tablediffpowerthetatwo[1,1]<-sum(abs(thetasmall[,1]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 40 and 60 power
+tablediffpowerthetatwo[1,2]<-sum(abs(thetasmall[,2]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 40 and 80 power
+tablediffpowerthetatwo[1,3]<-sum(abs(thetasmall[,3]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 60 and 80 power
+
+
+n1<-23.30131
+n2<-39.19124
+n3<-62.79265
+
+n<-50
+thetasmallfifty<-ttestsim(N,n, theta1, theta2, theta3, n1, n2, n3)
+
+tablediffpowerthetatwo[2,1]<-sum(abs(thetasmallfifty[,1]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 40 and 60 power
+tablediffpowerthetatwo[2,2]<-sum(abs(thetasmallfifty[,2]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 40 and 80 power
+tablediffpowerthetatwo[2,3]<-sum(abs(thetasmallfifty[,3]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 60 and 80 power
+
+
+n1<-9.102075
+n2<-15.309079
+n3<-24.52828
+n<-25
+
+thetasmalltwentyfive<-ttestsim(N,n, theta1, theta2, theta3, n1, n2, n3)
+
+tablediffpowerthetatwo[3,1]<-sum(abs(thetasmalltwentyfive[,1]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 40 and 60 power
+tablediffpowerthetatwo[3,2]<-sum(abs(thetasmalltwentyfive[,2]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 40 and 80 power
+tablediffpowerthetatwo[3,3]<-sum(abs(thetasmalltwentyfive[,3]) > qt(0.975, df =n-1))/N # prob of test concluding that they are different for 60 and 80 power
+
+tablediffpowerthetatwo
