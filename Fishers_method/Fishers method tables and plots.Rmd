@@ -1,0 +1,86 @@
+---
+title: "Fisher's method tables and plots"
+author: "Katie Fitzgerald"
+date: "1/15/2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Table: RPE- Power of Fisher's method given large sample sizes for varying $\delta$ and true # of non-null effects (i.e. "Best-case scenario")
+```{r, echo=FALSE, warning= FALSE, message = FALSE}
+library(knitr)
+library(tidyverse)
+RPP_RPE_power_results <- readRDS("./RPP_RPE_power_results.RDS")
+table <- spread(RPP_RPE_power_results, key = delta, value = power)
+table_rpp <- table[table$study == "RPP", -c(1,3, 4)]
+table_rpe <- table[table$study == "RPE", -c(1,3, 4)]
+kable(table_rpe, format="markdown", digits=4, align=c('l','r','r','r'),row.names = FALSE, col.names=c("# of false negatives","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"),caption="RPE: Power to reject H0 with large n")
+```
+
+Table: RPP- Power of Fisher's method given large sample sizes for varying $\delta$ and true # of non-null effects (i.e. "Best-case scenario")
+```{r, echo=FALSE, warning= FALSE, message = FALSE}
+kable(table_rpp, format="markdown", digits=4, align=c('l','r','r','r'),row.names = FALSE, col.names=c("# of false negatives","$\\delta=0.2$","$\\delta=0.5$","$\\delta=0.8$"),caption="RPP: Power to reject H0 with large n")
+```
+
+
+```{r echo = FALSE, warning = FALSE, message = FALSE , fig.cap = "Power of Fisher's method, best-case scenario using RPE and RPP sample sizes \\label{fig:sig:plot_all}"}
+library(ggplot2)
+library(wesanderson) # color palettes
+zs1 = wes_palette("Zissou1")
+dj1 = wes_palette("Darjeeling1")
+dj2 = wes_palette("Darjeeling2")
+
+# standard theme for plots
+stdtheme = theme(panel.grid.minor = element_blank(),
+                 axis.ticks = element_blank(),
+                 axis.text = element_text(size = 16),
+                 axis.title = element_text(size = 18),
+                 legend.title = element_text(size = 16),
+                 legend.text = element_text(size = 16),
+                 legend.text.align = 0)
+
+study_labels <- c( 'RPE' = "RPE, k = 7", 'RPP' = "RPP, k = 64")
+
+plot_all <- ggplot(RPP_RPE_power_results, aes(x = prop, y = power, color = factor(delta)))+
+  facet_grid(rows = vars(study), labeller = labeller(study = study_labels)) +
+  stdtheme +
+  theme(strip.text = element_text(size = 16))+
+  scale_x_continuous(name = "Proportion of false negatives") +
+  scale_y_continuous(name = "Power")+
+  labs(color = expression(delta))+
+  geom_line()
+plot_all
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.cap = "Power of Fisher's method, general case \\label{fig:sig:plot_general_case}"}
+
+###CREATE PLOT FOR GENERAL SETTING####
+k10 <- readRDS("./k10_data.RDS")
+k50 <- readRDS("./k50_data.RDS")
+k100 <- readRDS("./k100_data.RDS")
+
+n_labels <- c('25' = "n=25", '50' = "n=50", '75' = "n=75", '100'= "n=100")
+k_labels <- c( '10' = "k=10", '50' = "k=50", '100' = "k=100")
+
+k10$prop <- k10$M/k10$k
+k50$prop <- k50$M/k50$k
+k100$prop <- k100$M/k100$k
+
+all <- rbind(k10,k50,k100)
+plot_general_case <- ggplot(all, aes(x = prop, y = power, color = factor(delta))) +
+  facet_grid(k~n, labeller = labeller(n = n_labels, k = k_labels)) +
+  stdtheme + 
+  theme(axis.text = element_text(size = 6), strip.text = element_text(size = 16)) +
+  scale_x_continuous(name = "Proportion of false negatives" ) +
+  scale_y_continuous(name = "Power") +
+  labs(color = expression(delta))+
+  geom_line()
+
+plot_general_case
+```
+
