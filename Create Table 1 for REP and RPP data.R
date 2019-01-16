@@ -39,17 +39,29 @@ stdtheme = theme(panel.grid.minor = element_blank(),
                  legend.text.align = 0)
 
 plot_rpp <- ggplot(rpp_power_results, aes(x = prop, y = power, color = factor(delta))) +
-  #facet_grid(k~n, labeller = labeller(n = n_labels, k = k_labels)) +
-  #theme(panel.grid.minor = element_blank(),
-        #axis.ticks = element_blank(), plot.title = element_text(hjust = 0.5)) +
   stdtheme +
-  #scale_color_brewer(palette="Dark2")+
   scale_x_continuous(name = "Proportion of false negatives") +
   scale_y_continuous(name = "Power")+
-  #geom_point(size = 3) +
-  #facet_grid(.~n, labeller = labeller(n = labels)) +
   labs(title = "Power of Fisher's method: RPP", color = expression(delta))+
-  #geom_smooth(method = "loess", se = FALSE, size = 0.5)
   geom_line()
 
 rpe_power_results <- readRDS("Fishers_method/rpe_power_results.RDS")
+rpe_delta_0.8_fillin_power100 <- rpe_power_results %>% filter(M > M[dim(rpe_power_results)[1]] & delta == 0.2) %>% mutate(power = 1, delta = 0.8)
+rpe_power_results <- rbind(rpe_power_results, rpe_delta_0.8_fillin_power100)
+rpe_power_results$prop <- rpe_power_results$M / rpe_power_results$k
+
+rpe_power_results$study <- "RPE"
+rpp_power_results$study <- "RPP"
+all_power_results <- rbind(rpp_power_results, rpe_power_results)
+saveRDS(all_power_results, "RPP_RPE_power_results.RDS")
+
+study_labels <- c( 'RPE' = "RPE, k = 7", 'RPP' = "RPP, k = 64")
+
+plot_all <- ggplot(all_power_results, aes(x = prop, y = power, color = factor(delta))) +
+  facet_grid(rows = vars(study), labeller = labeller(study = study_labels)) +
+  stdtheme +
+  theme(strip.text = element_text(size = 16))+
+  scale_x_continuous(name = "Proportion of false negatives") +
+  scale_y_continuous(name = "Power")+
+  labs(color = expression(delta))+
+  geom_line()
