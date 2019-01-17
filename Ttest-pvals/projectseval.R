@@ -1,6 +1,9 @@
 source("./src/metrics_funs.R")
 library(tidyverse)
+library(readr)
+rpp<- read_csv("Ttest-pvals/rpp_data_cleaned.csv")
 fulldat<-readRDS("C:/Users/Mena Whalen/Downloads/full_data_rep_fisher.RDS")
+fulldat<- readRDS("C:/Users/Mena/Documents/Replication/replication_metrics/Ttest-pvals/full_data_rep_fisher.RDS")
 #data = paper from which results were pulled
 #experiment = experiment name
 #site = site name ("original" or "replicate")
@@ -9,6 +12,17 @@ fulldat<-readRDS("C:/Users/Mena Whalen/Downloads/full_data_rep_fisher.RDS")
 #                        replicated = 0 if authors determined if replication failed, 1 if succeeded
 
 # t test function for the same theta
+rpp$site<-ifelse(rpp$replicate == 0, "original", "replicate")
+newrpp<-data.frame(cbind(data = rep("RPP",length(rpp$site)),experiment =rpp$experiment, site= rpp$site, d=rpp$d, 
+                         vd=rpp$vd, replicated=rpp$replicated))
+
+fulldat<-fulldat[!(fulldat$data == "RPP"),]
+fulldat<-rbind(fulldat, newrpp)
+fulldat$d<-as.numeric(fulldat$d)
+fulldat$vd<-as.numeric(fulldat$vd)
+fulldat$replicated<-as.integer(fulldat$replicated)
+
+
 ttestsameFunc<-function(theta){
   
 fulldat %>% 
