@@ -1,7 +1,8 @@
-case1tab<-function(N, theta, powern1, powern2, powern3, rowNames, colNames){
+case1tab<-function(N, n, theta, powern1, powern2, powern3, rowNames, colNames){
   
   #############################################
   # TAKES: N; Number of simulations
+  #        n; the number or pairs in the simulation
   #        theta; vector of 3 thetas comparing
   #        powern1; 3 samples sizes for each theta given a certain power
   #        powern2; 3 samples sizes for each theta given a certain power 
@@ -13,20 +14,20 @@ case1tab<-function(N, theta, powern1, powern2, powern3, rowNames, colNames){
   
 tab<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(rowNames, colNames))
 
-sim1<- ttestsim(N, theta[1], theta[2], theta[3], powern1[1], powern1[2], powern1[3])
-tab[1,1]<-sum(abs(sim1[,1]) > 1.98)/N 
-tab[1,2]<-sum(abs(sim1[,2]) > 1.98)/N 
-tab[1,3]<-sum(abs(sim1[,3]) > 1.98)/N 
+sim1<- ttestsim(N, n, theta[1], theta[2], theta[3], powern1[1], powern1[2], powern1[3])
+tab[1,1]<-sum(abs(sim1[,1]) > qt(0.975, df =n-1))/N 
+tab[1,2]<-sum(abs(sim1[,2]) > qt(0.975, df =n-1))/N 
+tab[1,3]<-sum(abs(sim1[,3]) > qt(0.975, df =n-1))/N 
 
-sim2<- ttestsim(N, theta[1], theta[2], theta[3], powern2[1], powern2[2], powern2[3])
-tab[2,1]<-sum(abs(sim2[,1]) > 1.98)/N 
-tab[2,2]<-sum(abs(sim2[,2]) > 1.98)/N 
-tab[2,3]<-sum(abs(sim2[,3]) > 1.98)/N 
+sim2<- ttestsim(N, n, theta[1], theta[2], theta[3], powern2[1], powern2[2], powern2[3])
+tab[2,1]<-sum(abs(sim2[,1]) > qt(0.975, df =n-1))/N  
+tab[2,2]<-sum(abs(sim2[,2]) > qt(0.975, df =n-1))/N 
+tab[2,3]<-sum(abs(sim2[,3]) > qt(0.975, df =n-1))/N 
 
-sim3<- ttestsim(N, theta[1], theta[2], theta[3], powern3[1], powern3[2], powern3[3])
-tab[3,1]<-sum(abs(sim3[,1]) > 1.98)/N 
-tab[3,2]<-sum(abs(sim3[,2]) > 1.98)/N 
-tab[3,3]<-sum(abs(sim3[,3]) > 1.98)/N 
+sim3<- ttestsim(N, n, theta[1], theta[2], theta[3], powern3[1], powern3[2], powern3[3])
+tab[3,1]<-sum(abs(sim3[,1]) > qt(0.975, df =n-1))/N 
+tab[3,2]<-sum(abs(sim3[,2]) > qt(0.975, df =n-1))/N 
+tab[3,3]<-sum(abs(sim3[,3]) > qt(0.975, df =n-1))/N 
 
 return(tab)
 }
@@ -76,10 +77,11 @@ case1sd
 
 
 
-case2tab<-function(N, theta, powern1, powern2, powern3, rowNames, colNames){
+case2tab<-function(N, n, theta, powern1, powern2, powern3, rowNames, colNames){
   
   #############################################
   # TAKES: N; Number of simulations
+  #        n, number of pairs in the simulation
   #        theta; vector of 3 thetas comparing
   #        powern1; 3 samples sizes for each theta given a certain estimate size
   #        powern2; 3 samples sizes for each theta given a certain estimate size 
@@ -91,20 +93,20 @@ case2tab<-function(N, theta, powern1, powern2, powern3, rowNames, colNames){
   
   tab<-matrix(data = NA, nrow = 3, ncol = 3, dimnames = list(rowNames, colNames))
   
-  sim1<- ttestsim(N, theta[1], theta[1], theta[1], powern1[1], powern2[1], powern3[1])
-  tab[1,1]<-sum(abs(sim1[,1]) > 1.98)/N 
-  tab[1,2]<-sum(abs(sim1[,2]) > 1.98)/N 
-  tab[1,3]<-sum(abs(sim1[,3]) > 1.98)/N 
+  sim1<- ttestsim(N, n[1], theta[1], theta[1], theta[1], powern1[1], powern2[1], powern3[1])
+  tab[1,1]<-sum(abs(sim1[,1]) > qt(0.975, df =n[1]-1))/N 
+  tab[1,2]<-sum(abs(sim1[,2]) > qt(0.975, df =n[1]-1))/N 
+  tab[1,3]<-sum(abs(sim1[,3]) > qt(0.975, df =n[1]-1))/N 
   
-  sim2<- ttestsim(N, theta[2], theta[2], theta[2], powern1[2], powern2[2], powern3[2])
-  tab[2,1]<-sum(abs(sim2[,1]) > 1.98)/N 
-  tab[2,2]<-sum(abs(sim2[,2]) > 1.98)/N 
-  tab[2,3]<-sum(abs(sim2[,3]) > 1.98)/N 
+  sim2<- ttestsim(N, n[2], theta[2], theta[2], theta[2], powern1[2], powern2[2], powern3[2])
+  tab[2,1]<-sum(abs(sim2[,1]) > qt(0.975, df =n[2]-1))/N 
+  tab[2,2]<-sum(abs(sim2[,2]) > qt(0.975, df =n[2]-1))/N 
+  tab[2,3]<-sum(abs(sim2[,3]) > qt(0.975, df =n[2]-1))/N 
   
-  sim3<- ttestsim(N, theta[3], theta[3], theta[3], powern1[3], powern2[3], powern3[3])
-  tab[3,1]<-sum(abs(sim3[,1]) > 1.98)/N 
-  tab[3,2]<-sum(abs(sim3[,2]) > 1.98)/N 
-  tab[3,3]<-sum(abs(sim3[,3]) > 1.98)/N 
+  sim3<- ttestsim(N, n[3], theta[3], theta[3], theta[3], powern1[3], powern2[3], powern3[3])
+  tab[3,1]<-sum(abs(sim3[,1]) > qt(0.975, df =n[3]-1))/N 
+  tab[3,2]<-sum(abs(sim3[,2]) > qt(0.975, df =n[3]-1))/N  
+  tab[3,3]<-sum(abs(sim3[,3]) > qt(0.975, df =n[3]-1))/N 
   
   return(tab)
 }
@@ -149,3 +151,50 @@ case2sd[3,3]<-sd(boot2[3, 3,])
 
 case2means
 case2sd
+
+
+
+
+#####################################################################################
+######################################################################################
+# analysis with different n's
+# with theta 0.2
+N<-1000
+n<-c(100,50,25)
+theta<-c(0.8,0.8,0.8)
+power40<-c(9.102075, 9.102075, 9.102075)
+power60<-c(15.19124,15.19124, 15.19124)
+power80<-c(24.52838, 24.52838, 24.52838)
+row<-c("n 100", "n 50", "n 25")
+col<-c("Power 40/60", "Power 40/80", "Power 60/80")
+#c2table<-case2tab(N, n, theta, power80,power60, power40, row, col)
+
+bootmultn<-replicate(100, case2tab(N,n,theta, power40,power60, power80, row, col))
+
+multinmeans<-matrix(data = NA, nrow=3, ncol= 3, dimnames = list(c("n 100", " n 50", "n 25"),c("Power 40/60", "Power 40/80", "Power 60/80")))
+multinsd<-matrix(data = NA, nrow=3, ncol= 3, dimnames = list(c("n 100", " n 50", "n 25"),c("Power 40/60", "Power 40/80", "Power 60/80")))
+
+multinmeans[1,1]<-mean(bootmultn[1, 1,])
+multinsd[1,1]<-sd(bootmultn[1, 1,])
+multinmeans[1,2]<-mean(bootmultn[1,2,])
+multinsd[1,2]<-sd(bootmultn[1, 2,])
+multinmeans[1,3]<-mean(bootmultn[1,3,])
+multinsd[1,3]<-sd(bootmultn[1, 3,])
+
+multinmeans[2,1]<-mean(bootmultn[2, 1,])
+multinsd[2,1]<-sd(bootmultn[2, 1,])
+multinmeans[2,2]<-mean(bootmultn[2,2,])
+multinsd[2,2]<-sd(bootmultn[2, 2,])
+multinmeans[2,3]<-mean(bootmultn[2,3,])
+multinsd[2,3]<-sd(bootmultn[2, 3,])
+
+multinmeans[3,1]<-mean(bootmultn[3, 1,])
+multinsd[3,1]<-sd(bootmultn[3, 1,])
+multinmeans[3,2]<-mean(bootmultn[3,2,])
+multinsd[3,2]<-sd(bootmultn[3, 2,])
+multinmeans[3,3]<-mean(bootmultn[3,3,])
+multinsd[3,3]<-sd(bootmultn[3, 3,])
+
+multinmeans
+multinsd
+
