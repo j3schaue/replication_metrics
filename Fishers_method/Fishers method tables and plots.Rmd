@@ -44,17 +44,29 @@ stdtheme = theme(panel.grid.minor = element_blank(),
                  legend.text = element_text(size = 16),
                  legend.text.align = 0)
 
-study_labels <- c( 'RPE' = "RPE, k = 7", 'RPP' = "RPP, k = 64")
+study_labels <- c( 'RPE' = "RPE, r = 7", 'RPP' = "RPP, r = 64")
 
-plot_all <- ggplot(RPP_RPE_power_results, aes(x = prop, y = power, color = factor(delta)))+
+plot_all <- ggplot(RPP_RPE_power_results, 
+                   aes(x = prop, y = power, linetype = factor(delta)))+
   facet_grid(rows = vars(study), labeller = labeller(study = study_labels)) +
   stdtheme +
   theme(strip.text = element_text(size = 16))+
   scale_x_continuous(name = "Proportion of false negatives") +
-  scale_y_continuous(name = "Power")+
-  labs(color = expression(delta))+
+  scale_y_continuous(name = "Power of Fisher's method")+
+  labs(linetype = expression(delta))+
   geom_line()
 plot_all
+
+
+plot_worst <- ggplot(RPP_RPE_worst, aes(x = prop, y = power, linetype = factor(delta)))+
+  facet_grid(rows = vars(study), labeller = labeller(study = study_labels)) +
+  stdtheme +
+  theme(strip.text = element_text(size = 16))+
+  scale_x_continuous(name = "Proportion of false negatives") +
+  scale_y_continuous(name = "Power of Fisher's method")+
+  labs(linetype = expression(delta))+
+  geom_line()
+plot_worst
 ```
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.cap = "Power of Fisher's method, general case \\label{fig:sig:plot_general_case}"}
@@ -72,15 +84,18 @@ k50$prop <- k50$M/k50$k
 k100$prop <- k100$M/k100$k
 
 all <- rbind(k10,k50,k100)
-plot_general_case <- ggplot(all, aes(x = prop, y = power, color = factor(delta))) +
-  facet_grid(k~n, labeller = labeller(n = n_labels, k = k_labels)) +
+plot_general_case <- ggplot(all, aes(x = prop, y = power, linetype = factor(delta))) +
+  #facet_grid(k~n, labeller = labeller(n = n_labels, k = k_labels)) +
   stdtheme + 
   theme(axis.text = element_text(size = 6), strip.text = element_text(size = 16)) +
   scale_x_continuous(name = "Proportion of false negatives" ) +
   scale_y_continuous(name = "Power") +
-  labs(color = expression(delta))+
+  labs(linetype = expression(delta))+
   geom_line()
 
 plot_general_case
+
+power_80_k10 <- dplyr::filter(all, k == 10 & ((delta == .8 & n == 25 ) | (delta == 0.5 & (n == 50 | n == 75)) | (delta == 0.2 & n == 100)))
+
 ```
 

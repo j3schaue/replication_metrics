@@ -63,6 +63,7 @@ rpp_fishers$n_effective <- (8+(rpp_fishers$d)^2)/(4*rpp_fishers$vd)
 rpp_fishers$n_effective <- ifelse(rpp_fishers$experiment == "Koo", max(rpp_fishers$n_effective,na.rm =TRUE), rpp_fishers$n_effective)
 n<-sort(rpp_fishers$n_effective,decreasing=TRUE, na.last = TRUE)
 
+
 source("./src/metrics_funs.R")
 replicate_power<-data.frame(n,power_delta_0.2=power_fun(0.2,2/n + 0.2^2/(4*n)),power_delta_0.5=power_fun(0.5,2/n + 0.5^2/(4*n)),power_delta_0.8=power_fun(0.8,2/n + 0.8^2/(4*n)))
 #set largest to be the largest sample size among the studies for which there was at most 99.99% power for a given delta
@@ -72,11 +73,27 @@ n_delta_0.8<-c(rep(replicate_power$n[12],11),n[12:64]) #11 largest studies had >
 
 M <- c(1,2,3,4,5,round(64*seq(0.1,1,0.1))) #want simulations for 1-5 studies and at each 10th percentile
 delta_0.2_large_n<-power_sims(100000, M, 0.2, n_delta_0.2, 64) #starts at n=745
-delta_0.5_large_n<-power_sims(100000, M, 0.5, n_delta_0.5, 64) #starts at n=159
+delta_0.5_large_n<-power_sims(10000, M, 0.5, n_delta_0.5, 64) #starts at n=159
 delta_0.8_large_n<-power_sims(100000, M, 0.8, n_delta_0.8, 64) #starts at n=100
 
 rpp_power_results <- rbind(delta_0.2_large_n, delta_0.5_large_n, delta_0.8_large_n)
 saveRDS(rpp_power_results ,"rpp_power_results.RDS")
+
+n_worst <- sort(rpp_fishers$n_effective,decreasing=FALSE, na.last = TRUE)
+source("./src/metrics_funs.R")
+replicate_power<-data.frame(n_worst,power_delta_0.2=power_fun(0.2,2/n_worst + 0.2^2/(4*n_worst)),power_delta_0.5=power_fun(0.5,2/n_worst + 0.5^2/(4*n_worst)),power_delta_0.8=power_fun(0.8,2/n_worst + 0.8^2/(4*n_worst)))
+#set largest to be the largest sample size among the studies for which there was at most 99.99% power for a given delta
+n_worst_delta_0.2<- n_worst #all studies had <99.99% power to detect delta=0.2
+n_worst_delta_0.5<-c(n_worst[1:61], rep(replicate_power$n_worst[61],3))#3 largest studies had >99.99% power to detect delta=0.5
+n_worst_delta_0.8<-c(n_worst[1:53], rep(replicate_power$n_worst[53],11)) #11 largest studies had >99.99% power to detect delta=0.8
+
+M <- c(1,2,3,4,5,round(64*seq(0.1,1,0.1))) #want simulations for 1-5 studies and at each 10th percentile
+delta_0.2_large_n_worst<-power_sims(10000, M, 0.2, n_worst_delta_0.2, 64) #starts at n_worst=745
+delta_0.5_large_n_worst<-power_sims(10000, M, 0.5, n_worst_delta_0.5, 64) #starts at n_worst=159
+delta_0.8_large_n_worst<-power_sims(10000, M, 0.8, n_worst_delta_0.8, 64) #starts at n_worst=100
+
+rpp_power_results_worst <- rbind(delta_0.2_large_n_worst, delta_0.5_large_n_worst, delta_0.8_large_n_worst)
+saveRDS(rpp_power_results_worst ,"rpp_power_results_worst.RDS")
 
 
 ########################################
@@ -104,6 +121,26 @@ delta_0.8_large_n<-power_sims(100000, M, 0.8, n_delta_0.8, 7) #starts at n=100
 rpe_power_results <- rbind(delta_0.2_large_n, delta_0.5_large_n, delta_0.8_large_n)
 saveRDS(rpe_power_results ,"rpe_power_results.RDS")
 
+n_worst <-sort(rpe_fishers$n_effective,decreasing=FALSE, na.last = TRUE)
+replicate_power<-data.frame(n_worst,power_delta_0.2=power_fun(0.2,2/n_worst + 0.2^2/(4*n_worst)),power_delta_0.5=power_fun(0.5,2/n_worst + 0.5^2/(4*n_worst)),power_delta_0.8=power_fun(0.8,2/n_worst + 0.8^2/(4*n_worst)))
+#set largest to be the largest sample size among the studies for which there was at most 99.99% power for a given delta
+n_worst_delta_0.2<- n_worst #all studies had <99.99% power to detect delta=0.2
+n_worst_delta_0.5<- n_worst #all studies had <99.99% power to detect delta=0.5
+n_worst_delta_0.8<-c(n_worst[1:5], rep(replicate_power$n_worst[5],2)) #11 largest studies had >99.99% power to detect delta=0.8
+
+
+M <- c(1,2,3,4,5,6,7)
+delta_0.2_large_n_worst<-power_sims(10000, M, 0.2, n_worst_delta_0.2, 7) 
+delta_0.5_large_n_worst<-power_sims(10000, M, 0.5, n_worst_delta_0.5, 7) 
+delta_0.8_large_n_worst<-power_sims(10000, M, 0.8, n_worst_delta_0.8, 7) 
+
+rpe_power_results_worst <- rbind(delta_0.2_large_n_worst, delta_0.5_large_n_worst, delta_0.8_large_n_worst)
+saveRDS(rpe_power_results_worst ,"rpe_power_results_worst.RDS")
+
+rpe_power_results_worst$study <- "rpe"
+rpp_power_results_worst$study <- "rpp"
+RPP_RPE_worst <- rbind(rpe_power_results_worst, rpp_power_results_worst)
+RPP_RPE_worst <- mutate(RPP_RPE_worst, prop = M/k)
 
 ###CREATE PLOT####
 k10 <- readRDS("./k10_data.RDS")
@@ -132,52 +169,4 @@ plot_all <- ggplot(all, aes(x = prop, y = power, color = factor(delta))) +
   #geom_smooth(method = "loess", se = FALSE, size = 0.5)
   geom_line()
 
-
-
-diane<-function(delta,n){
-  p1<-c()
-  z <- c()
-  for (j in 1:100000){ 
-    #p1[j]<-2*(1 - pnorm(abs(rnorm(1, delta, sqrt(2/n + delta^2 / (4*n))))/sqrt(2/n + delta^2 / (4*n))))
-    #p1[j]<-2*(1 - pnorm(abs(rnorm(1, 1/2*2*n*1/4*delta^2, sqrt(2*n*1/4*delta^2)))/sqrt(2*n*1/4*delta^2)))
-    z[j] <- rnorm(1,delta, sqrt(2/n + delta^2/(4*n)))
-    #p1[j] <- (1-pnorm(z[j]/sqrt(2/n + delta^2/(4*n))))
-    p1[j] <- 2*(1-pnorm(abs(z[j])/sqrt(2/n + delta^2/(4*n)))) #two-sided
-  }
-  D<--2*log(p1)
-}
-
-
-plot <- function(delta, n){
-  d1 <- as.data.frame(diane(delta,n))
-  colnames(d1)[1]<-"V1"
-  ggplot(d1, aes(x = V1)) +
-  scale_x_continuous(name = "-2log(p_i)", limits = c(-20,80), breaks = seq(-20,100,10)) +
-  geom_histogram(aes(y = ..density..)) +
-  #stat_function(fun = dnorm, args = list(mean = 2*n*1/4*delta^2, sd = sqrt(2*n*delta^2))) +
-  stat_function(fun = dnorm, args = list(mean = 1/2*2*n*1/4*delta^2, sd = sqrt(2*n*1/4*delta^2))) + #two-sided
-  labs(title = n)
-}
-
-p1 <- plot(0.2,700)
-p2 <- plot(0.2,1500)
-p3 <- plot(0.5,100)
-p4 <- plot(0.5,250)
-p5 <- plot(0.8,50)
-p6 <- plot(0.8,100)
-grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 3, ncol = 2)
-
-library(latex2exp)
-par(mfrow=c(3,2))
-
-hist(dist_of_X2(0.2,700), main=TeX('n=700, $\\theta$=0.2'), xlab=expression(-2*log(p_i)))
-x<-seq(0,60,0.1)
-curve(dnorm(x, mean = 0.5*700*2*1/4*0.2^2, sd = sqrt(2*700*1/4*0.2^2)), add = TRUE)
-hist(dist_of_X2(0.2,1500), main=TeX('n=1500, $\\theta$=0.2'), xlab=expression(-2*log(p_i)))
-
-hist(dist_of_X2(0.5,100), main=TeX('n=100, $\\theta$=0.5'),  xlab=expression(-2*log(p_i)))
-hist(dist_of_X2(0.5,250), main=TeX('n=250, $\\theta$=0.5'),  xlab=expression(-2*log(p_i)))
-
-hist(dist_of_X2(0.8,50), main=TeX('n=50, $\\theta$=0.8'),  xlab=expression(-2*log(p_i)))
-hist(dist_of_X2(0.8,100), main=TeX('n=100, $\\theta$=0.8'),  xlab=expression(-2*log(p_i)))
-  
+ 
